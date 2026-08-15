@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(eza -la /Users/mao/code/maoacr/portfolio)",
+      "mcp__plugin_engram_engram__mem_search",
+      "mcp__plugin_engram_engram__mem_context",
+      "Bash(brew install *)",
+      "Bash(eza -T -L 3 -I 'node_modules|.next|.git' /Users/mao/code/maoacr/portfolio)",
+      "mcp__plugin_engram_engram__mem_save",
+      "Bash(eza -la /Users/mao/code/maoacr/portfolio/node_modules)",
+      "Bash(rg -i '^\\\\.pnpm$|\\\\.package-lock')",
+      "Bash(eza -d /Users/mao/code/maoacr/portfolio/node_modules/.pnpm)",
+      "Bash(rm -f package-lock.json node_modules/.package-lock.json)",
+      "Bash(pnpm --version)",
+      "Bash(pnpm add *)",
+      "Bash(python3 -c ' *)",
+      "Bash(fd \"api-endpoints\" /Users/mao/code/maoacr/portfolio/node_modules/.pnpm/@notionhq+client*/node_modules/@notionhq/client/build/src/)",
+      "Bash(rg -n data_sources /Users/mao/code/maoacr/portfolio/node_modules/.pnpm/@notionhq+client@5.25.2/node_modules/@notionhq/client/build/src/api-endpoints/*.d.ts)",
+      "Bash(xargs rg -l \"data_sources\")",
+      "Bash(rg -n DataSourceReferenceResponse /Users/mao/code/maoacr/portfolio/node_modules/.pnpm/@notionhq+client@5.25.2/node_modules/@notionhq/client/build/src/api-endpoints/*.d.ts -A3)",
+      "Bash(rg -n 'interface PageObjectResponse|properties:' /Users/mao/code/maoacr/portfolio/node_modules/.pnpm/@notionhq+client@5.25.2/node_modules/@notionhq/client/build/src/api-endpoints/*.d.ts)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(npm install *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

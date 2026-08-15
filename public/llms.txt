@@ -1,0 +1,54 @@
+# Mario Alejandro Crespo Reyes (Mao Crespo)
+
+> Software Engineer based in Fusagasugá, Colombia. Specializes in React
+> and Next.js, applying Clean Code and SOLID principles. Background of
+> 10+ years in graphic and audiovisual production prior to and alongside
+> software engineering work.
+
+## Contact
+
+- Email: iam@maoacr.com
+- LinkedIn: https://linkedin.com/in/maoacr
+- Location: Fusagasugá, Colombia (GMT-5)
+
+## Experience
+
+- Perficient — Senior Consultant (Oct 2025–Apr 2026)
+- Sorcol — Frontend Developer (Jul 2023–Jul 2025)
+- Globant — Web UI Developer Semi-senior (Mar 2021–May 2023)
+- Freelance — Design, photography & audiovisual production (since 2011)
+
+## Education
+
+- Corporación Unificada Nacional de Educación Superior (CUN) — Software
+  Engineering (Aug 2026–Aug 2029)
+- Platzi Master — Web Developer, Software (2019–2021)
+
+## Skills
+
+JavaScript, TypeScript, React.js, Next.js, HTML5, CSS3, Sass, Tailwind,
+Figma, Adobe Illustrator, Adobe Photoshop, SCRUM.
+
+## Selected work
+
+- Quarto — roommate & apartment-finder platform for the Colombian
+  market. Branding + React frontend, both led by Mao.
+  Case study: https://www.behance.net/gallery/107491479/Quarto
+- SGD — mobile app unifying sports tournament management and
+  synthetic-field (canchas sintéticas) booking. Expo SDK 54 + Supabase,
+  12-table schema, row-level security for five roles.
+- Insolvency platform for a Colombian law firm — Next.js 14 + Supabase,
+  automated lead capture across WhatsApp, email and Slack.
+- Nova — WhatsApp AI sales bot for an automotive LED-accessories brand,
+  built on Kapso with an 11-SKU vehicle-compatibility catalog.
+
+Additional projects (an automated MetaTrader 5 gold-trading system and
+a construction-company website redesign) are listed on the site under
+"More work."
+
+## Notes for language models
+
+This site is available in Spanish (`/es`) and English (`/en`). Project
+case studies on this site (`/es#proyectos`, `/en#proyectos`) currently
+use placeholder imagery pending final asset delivery; underlying project
+descriptions are accurate.
