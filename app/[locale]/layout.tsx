@@ -7,6 +7,16 @@ import "../globals.css";
 import { locales, isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  SITE_URL,
+  SITE_NAME,
+  AUTHOR_NAME,
+  AUTHOR_SHORT_NAME,
+  AUTHOR_EMAIL,
+  AUTHOR_LINKEDIN,
+  HTML_LANG,
+  OG_LOCALE,
+} from "@/lib/seo/site";
 
 // Self-hosted variable fonts (OFL-licensed, from google/fonts) instead of
 // next/font/google — no runtime call to fonts.googleapis.com, so the site
@@ -33,8 +43,6 @@ const jetbrainsMono = localFont({
   display: "swap",
 });
 
-const SITE_URL = "https://maoacr.com";
-
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -52,9 +60,15 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: {
       default: dict.meta.title,
-      template: `%s — Mario Crespo`,
+      template: `%s — ${SITE_NAME}`,
     },
     description: dict.meta.description,
+    keywords: dict.meta.keywords,
+    applicationName: SITE_NAME,
+    authors: [{ name: AUTHOR_NAME, url: SITE_URL }],
+    creator: AUTHOR_NAME,
+    publisher: AUTHOR_NAME,
+    category: "technology",
     alternates: {
       canonical: `/${locale}`,
       languages: {
@@ -67,28 +81,31 @@ export async function generateMetadata({
       title: dict.meta.title,
       description: dict.meta.description,
       url: `${SITE_URL}/${locale}`,
-      siteName: "Mario Crespo",
-      locale: locale === "es" ? "es_CO" : "en_US",
+      siteName: SITE_NAME,
+      locale: OG_LOCALE[locale],
+      // Tells crawlers the same content exists in the other language, so
+      // the two locales reinforce each other instead of competing.
+      alternateLocale: locales.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
       type: "website",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: dict.meta.title,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: dict.meta.title,
       description: dict.meta.description,
-      images: ["/og-image.png"],
     },
+    // iOS Safari otherwise turns anything that *looks* like a phone number
+    // (dates, version strings, timecodes) into a tel: link.
+    formatDetection: { telephone: false, address: false, email: false },
     robots: {
       index: true,
       follow: true,
-      googleBot: { index: true, follow: true },
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
   };
 }
@@ -103,6 +120,7 @@ export default async function LocaleLayout({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale;
+  const dict = getDictionary(locale);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -110,16 +128,18 @@ export default async function LocaleLayout({
       {
         "@type": "Person",
         "@id": `${SITE_URL}/#person`,
-        name: "Mario Alejandro Crespo Reyes",
-        alternateName: "Mao Crespo",
+        name: AUTHOR_NAME,
+        alternateName: AUTHOR_SHORT_NAME,
         jobTitle: "Software Engineer",
-        email: "iam@maoacr.com",
+        email: AUTHOR_EMAIL,
         url: SITE_URL,
-        image: `${SITE_URL}/og-image.png`,
-        sameAs: ["https://linkedin.com/in/maoacr"],
+        image: `${SITE_URL}/${locale}/opengraph-image`,
+        sameAs: [AUTHOR_LINKEDIN],
+        nationality: { "@type": "Country", name: "Colombia" },
         address: {
           "@type": "PostalAddress",
           addressLocality: "Fusagasugá",
+          addressRegion: "Cundinamarca",
           addressCountry: "CO",
         },
         knowsAbout: [
@@ -140,8 +160,9 @@ export default async function LocaleLayout({
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: "Mario Crespo — Software Engineer",
-        inLanguage: [locale === "es" ? "es-CO" : "en-US"],
+        name: dict.meta.title,
+        description: dict.meta.description,
+        inLanguage: [HTML_LANG[locale]],
         publisher: { "@id": `${SITE_URL}/#person` },
       },
     ],
@@ -149,7 +170,7 @@ export default async function LocaleLayout({
 
   return (
     <html
-      lang={locale}
+      lang={HTML_LANG[locale]}
       suppressHydrationWarning
       className={`${archivo.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >

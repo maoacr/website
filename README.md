@@ -60,20 +60,37 @@ npm run lint
    `picsum.photos` (ver nota en `lib/data/projects.ts`). Reemplaza cada
    `image` por la ruta real en `/public/projects/` cuando tengas los
    assets finales de cada caso (Quarto, SGD, Ley de Insolvencia, Nova...).
-2. **`og-image.png`**: falta la imagen 1200×630 para OpenGraph/Twitter
-   Card (referenciada en `app/[locale]/layout.tsx`).
-3. **Dominio**: `SITE_URL` está hardcodeado a `https://maoacr.com` en
-   `layout.tsx`, `sitemap.ts` y `robots.ts` — ajústalo si el dominio final es otro.
-4. **CV descargable** (opcional): si quieres un botón "Descargar CV",
+2. **CV descargable** (opcional): si quieres un botón "Descargar CV",
    agrega el PDF a `/public/` y un link en `components/contact.tsx` —
    hoy la sección de contacto solo tiene email, WhatsApp y LinkedIn.
 
 ## SEO & discoverability
 
-- Metadata completa (title template, OpenGraph, Twitter Card,
-  `hreflang` ES/EN/x-default) generada por locale en `generateMetadata`.
-- JSON-LD `Person` + `WebSite` (schema.org) inyectado en el `<head>`.
-- `sitemap.ts` y `robots.ts` vía las convenciones nativas de Next.js.
+- **`lib/seo/site.ts`** es la única fuente de verdad del dominio, la
+  identidad y los códigos de idioma. `SITE_URL` ya no está duplicado en
+  `layout.tsx` / `sitemap.ts` / `robots.ts`: se cambia en un solo lugar.
+- Metadata completa por locale en `generateMetadata` (title template,
+  keywords, authors, OpenGraph, Twitter Card, `hreflang` ES/EN/x-default,
+  `robots` con `max-image-preview:large` para que Google muestre miniatura
+  grande en resultados).
+- **`<html lang>` regional**: `es-CO` / `en-US`, no `es` genérico — el
+  sitio apunta a audiencia colombiana (`HTML_LANG` en `lib/seo/site.ts`).
+- **Imágenes OpenGraph generadas** con `next/og` (`opengraph-image.tsx`),
+  una por locale y **una por post de blog** con su propio título. No hay
+  ningún PNG que mantener a mano ni que se desincronice del contenido.
+  Nota: se renderizan con la fuente por defecto de Satori, no con Archivo
+  — Satori no resuelve fuentes variables de forma confiable.
+- JSON-LD: `Person` + `WebSite` en el root, `Blog` + `BreadcrumbList` en
+  el listado, y `BlogPosting` + `BreadcrumbList` en cada post, todos
+  enlazados al mismo `#person` para que Google lea el portafolio y el
+  blog como una sola identidad.
+- Descripción de cada post: columna opcional `Excerpt`/`Summary` en
+  Notion; si no existe, se deriva del primer párrafo del cuerpo
+  (`lib/notion/excerpt.ts`), recortada a 160 caracteres sin cortar palabras.
+- `sitemap.ts` y `robots.ts` vía las convenciones nativas de Next.js. El
+  sitemap incluye home, `/blog` y **cada post publicado** por locale; si
+  Notion falla en build, degrada a las rutas estáticas en vez de tumbar
+  el deploy.
 - `public/llms.txt`: resumen estructurado del perfil y los proyectos
   para que asistentes de IA (ChatGPT, Claude, Perplexity...) puedan
   leer y citar el sitio correctamente; `robots.ts` los admite

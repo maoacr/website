@@ -12,6 +12,13 @@ export type BlogPost = {
   /** ISO date string (Notion's native format), or null if unset. */
   publishedDate: string | null;
   lang: Locale;
+  /**
+   * Short summary used as the page's meta description and social-card
+   * text. Read from an optional "Excerpt" (or "Summary") rich-text column
+   * in Notion; null when that column doesn't exist, in which case the
+   * post page derives one from the first paragraph of the body.
+   */
+  excerpt: string | null;
 };
 
 /**

@@ -6,6 +6,18 @@ export const dictionaries = {
       title: "Mario Crespo — Software Engineer",
       description:
         "Ingeniero de software especializado en React y Next.js, con más de 10 años de experiencia audiovisual. Con base en Fusagasugá, Colombia.",
+      keywords: [
+        "Mario Crespo",
+        "Mao Crespo",
+        "software engineer Colombia",
+        "desarrollador React",
+        "desarrollador Next.js",
+        "desarrollador frontend Colombia",
+        "ingeniero de software Fusagasugá",
+        "desarrollo web y mobile",
+        "UX UI",
+        "portafolio desarrollador",
+      ],
     },
     nav: {
       role: "Software Engineer",
@@ -182,6 +194,9 @@ export const dictionaries = {
       empty: "No hay posts que coincidan con la búsqueda.",
       back: "Volver al blog",
       dateLocale: "es-CO",
+      metaTitle: "Blog",
+      metaDescription:
+        "Artículos y notas de Mario Crespo sobre desarrollo web y mobile, arquitectura de software, React, Next.js y dirección de arte digital.",
     },
     footer: {
       rights: "Todos los derechos reservados.",
@@ -194,6 +209,18 @@ export const dictionaries = {
       title: "Mario Crespo — Software Engineer",
       description:
         "Software engineer specialized in React and Next.js, with 10+ years of audiovisual production experience. Based in Fusagasugá, Colombia.",
+      keywords: [
+        "Mario Crespo",
+        "Mao Crespo",
+        "software engineer Colombia",
+        "React developer",
+        "Next.js developer",
+        "frontend developer Colombia",
+        "software engineer Fusagasugá",
+        "web and mobile development",
+        "UX UI",
+        "developer portfolio",
+      ],
     },
     nav: {
       role: "Software Engineer",
@@ -370,6 +397,9 @@ export const dictionaries = {
       empty: "No posts match your search.",
       back: "Back to blog",
       dateLocale: "en-US",
+      metaTitle: "Blog",
+      metaDescription:
+        "Articles and notes by Mario Crespo on web and mobile development, software architecture, React, Next.js and digital art direction.",
     },
     footer: {
       rights: "All rights reserved.",

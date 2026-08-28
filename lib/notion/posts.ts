@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { isFullPage, type PageObjectResponse, type QueryDataSourceParameters } from "@notionhq/client";
 import { notion, resolveSchema, type NotionSchema } from "./client";
 import { buildSlug } from "./slug";
@@ -73,6 +74,15 @@ function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
       ? (props["Published Date"].date?.start ?? null)
       : null;
 
+  // Optional — not in REQUIRED_PROPERTIES, so a database without either
+  // column keeps working; the post page falls back to deriving a summary
+  // from the body text.
+  const excerptProp = props.Excerpt ?? props.Summary;
+  const excerpt =
+    excerptProp?.type === "rich_text"
+      ? excerptProp.rich_text.map((t) => t.plain_text).join("").trim() || null
+      : null;
+
   return {
     id: page.id,
     slug: buildSlug(title, page.id),
@@ -82,10 +92,19 @@ function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
     author,
     publishedDate,
     lang: locale,
+    excerpt,
   };
 }
 
-export async function getPublishedPosts(locale: Locale): Promise<BlogPost[]> {
+/**
+ * Wrapped in React's `cache` so a single request that needs the same
+ * locale's posts more than once — `generateMetadata` and the page body
+ * both do, and so does the JSON-LD — pays for exactly one Notion query
+ * instead of one per call site.
+ */
+export const getPublishedPosts = cache(async function getPublishedPosts(
+  locale: Locale,
+): Promise<BlogPost[]> {
   const schema = await resolveSchema();
   const pages: PageObjectResponse[] = [];
   let cursor: string | undefined;
@@ -102,7 +121,7 @@ export async function getPublishedPosts(locale: Locale): Promise<BlogPost[]> {
   } while (cursor);
 
   return pages.map((page) => mapPage(page, locale));
-}
+});
 
 /**
  * There's no direct "get by slug" Notion query (slug isn't a real column —
@@ -110,10 +129,10 @@ export async function getPublishedPosts(locale: Locale): Promise<BlogPost[]> {
  * posts and matching. Fine at personal-blog volume; if this ever needs to
  * scale, swap for a real Slug column + a `filter` on that property.
  */
-export async function getPostBySlug(
+export const getPostBySlug = cache(async function getPostBySlug(
   locale: Locale,
   slug: string,
 ): Promise<BlogPost | null> {
   const posts = await getPublishedPosts(locale);
   return posts.find((post) => post.slug === slug) ?? null;
-}
+});

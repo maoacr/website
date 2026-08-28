@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { isFullBlock } from "@notionhq/client";
 import type { BlockObjectResponse } from "@notionhq/client";
 import { notion } from "./client";
@@ -12,7 +13,9 @@ import type { NotionBlock } from "./types";
  * downstream just gets a plain tree and never has to think about Notion's
  * fetch mechanics.
  */
-export async function getPageBlocks(blockId: string): Promise<NotionBlock[]> {
+export const getPageBlocks = cache(async function getPageBlocks(
+  blockId: string,
+): Promise<NotionBlock[]> {
   const blocks: BlockObjectResponse[] = [];
   let cursor: string | undefined;
 
@@ -31,4 +34,4 @@ export async function getPageBlocks(blockId: string): Promise<NotionBlock[]> {
       children: block.has_children ? await getPageBlocks(block.id) : undefined,
     })),
   );
-}
+});
