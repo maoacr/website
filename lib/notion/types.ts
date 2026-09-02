@@ -29,6 +29,14 @@ export type BlogPost = {
    * separate, server-only call: `getPostPassword` in posts.ts.
    */
   isProtected: boolean;
+  /**
+   * Notion page id of this post's translation, or null.
+   *
+   * Just the id — a Notion relation carries nothing else. Resolving it to
+   * a URL means finding that id among the other locale's published posts;
+   * see `getTranslation` in posts.ts.
+   */
+  translationId: string | null;
 };
 
 /**

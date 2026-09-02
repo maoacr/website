@@ -104,6 +104,38 @@ npm run lint
   leer y citar el sitio correctamente; `robots.ts` los admite
   explícitamente (GPTBot, ClaudeBot, PerplexityBot, etc.).
 
+## Traducciones entre idiomas
+
+Cada idioma de un post es **una fila distinta** en Notion, con su propio
+título, su propio `page.id` y por lo tanto su propio slug. Nada en el
+contenido permite deducir que dos filas son el mismo artículo: los
+títulos están traducidos, así que no coinciden, y los ids no tienen
+relación. Hay que declararlo.
+
+Se declara con una **relación de la database consigo misma**. Notion crea
+las dos caras de esa relación y, al apuntar a la misma tabla, ambas caen
+como dos columnas acá (hoy `Lang` y `Relation`): una la completás vos, la
+otra la espeja Notion. **El vínculo vive en una columna distinta según de
+qué lado del par estés parado**, así que `readTranslationId` busca las
+columnas por *tipo* (`relation`) y no por nombre — leer una sola columna
+hardcodeada resolvería el vínculo en un sentido y fallaría en silencio en
+el otro. Como efecto secundario, podés renombrar esas columnas sin romper
+nada.
+
+Con la relación puesta:
+
+- El switch de idioma va al post traducido, en vez del 404 que daba antes
+  al intercambiar el prefijo de idioma sobre un slug que no existe.
+- Se emite el `hreflang` de ambos idiomas, así Google entiende que son el
+  mismo artículo y consolida la autoridad de los dos.
+
+Sin la relación, el switch cae al listado del otro idioma — una página
+real en el idioma que pediste, no una pared. Y si la traducción está en
+`Draft`, `getTranslation` no la encuentra (solo mira posts publicados),
+así que una traducción a medio hacer no se filtra por el switch.
+
+`npm run blog:urls` te muestra qué posts están vinculados.
+
 ## Entradas protegidas con contraseña
 
 Un post se protege agregándole una contraseña en la columna **`Password`**

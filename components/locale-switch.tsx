@@ -11,9 +11,21 @@ type DocumentWithViewTransition = Document & {
 export function LocaleSwitch({
   locale,
   label,
+  href,
 }: {
   locale: Locale;
   label: string;
+  /**
+   * Where the other language actually lives, when swapping the locale
+   * prefix wouldn't get there.
+   *
+   * Most routes are symmetrical — `/es` ↔ `/en`, `/es/blog` ↔ `/en/blog` —
+   * so the prefix swap below is right. Blog posts are not: each language
+   * is its own Notion row with its own title and id, so the two slugs
+   * have nothing in common and the swapped path 404s. Those pages resolve
+   * the real destination on the server and pass it in.
+   */
+  href?: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -21,7 +33,7 @@ export function LocaleSwitch({
   function switchLocale() {
     const target = locale === "es" ? "en" : "es";
     const rest = pathname.replace(/^\/(es|en)/, "");
-    const nextPath = `/${target}${rest || ""}`;
+    const nextPath = href ?? `/${target}${rest || ""}`;
 
     const doc = document as DocumentWithViewTransition;
     const prefersReducedMotion = window.matchMedia(

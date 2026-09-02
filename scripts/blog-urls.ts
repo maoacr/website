@@ -49,6 +49,22 @@ function plainText(property: unknown): string {
  * The site handles this by reading the real schema (see resolveSchema);
  * here, checking both shapes is enough and keeps the script dependency-free.
  */
+/**
+ * The linked translation's page id, from whichever relation column holds
+ * it. Mirrors readTranslationId in lib/notion/posts.ts — a two-way Notion
+ * relation puts one side in each of two columns, so which column carries
+ * the value depends on which row you're looking at.
+ */
+function relationId(properties: Record<string, unknown>): string | null {
+  for (const value of Object.values(properties)) {
+    const prop = value as { type?: string; relation?: { id: string }[] };
+    if (prop?.type !== "relation") continue;
+    const id = prop.relation?.[0]?.id;
+    if (id) return id;
+  }
+  return null;
+}
+
 function choiceName(property: unknown): string | null {
   const prop = property as {
     select?: { name: string } | null;
@@ -83,8 +99,12 @@ async function main() {
     return;
   }
 
+  const titleById = new Map(
+    pages.map((page) => [page.id, plainText(page.properties.Title) || "(untitled)"]),
+  );
+
   for (const page of pages) {
-    const title = plainText(page.properties.Title) || "(untitled)";
+    const title = titleById.get(page.id)!;
     const status = choiceName(page.properties.Status) ?? "—";
     const lang = (choiceName(page.properties.lang) ?? "es").toLowerCase();
     const isProtected = plainText(page.properties.Password).length > 0;
@@ -98,11 +118,16 @@ async function main() {
       .join(", ");
 
     console.log(`\n${title}`);
-    console.log(`  [${marks}]`);
+    console.log(`  [${lang}] [${marks}]`);
     if (isPublished) {
       console.log(`  ${SITE_URL}/${lang}/blog/${buildSlug(title, page.id)}`);
     } else {
       console.log("  (not published — no public URL yet)");
+    }
+
+    const translation = relationId(page.properties);
+    if (translation) {
+      console.log(`  translation -> ${titleById.get(translation) ?? "(row not in this query)"}`);
     }
   }
   console.log("");

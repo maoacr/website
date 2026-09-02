@@ -7,9 +7,12 @@ import { LocaleSwitch } from "./locale-switch";
 export function SiteNav({
   locale,
   dict,
+  localeSwitchHref,
 }: {
   locale: Locale;
   dict: Dictionary;
+  /** Passed through to LocaleSwitch — see the note on its `href` prop. */
+  localeSwitchHref?: string;
 }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-bg/80 backdrop-blur-md">
@@ -30,7 +33,11 @@ export function SiteNav({
           <span className="hidden font-mono text-xs uppercase tracking-wider text-muted sm:inline">
             {dict.nav.role}
           </span>
-          <LocaleSwitch locale={locale} label={dict.nav.switchLocale} />
+          <LocaleSwitch
+            locale={locale}
+            label={dict.nav.switchLocale}
+            href={localeSwitchHref}
+          />
           <ThemeToggle label={dict.nav.switchTheme} />
         </div>
       </div>
