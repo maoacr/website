@@ -125,6 +125,21 @@ opcional: una database sin ella sigue funcionando igual.
   al instante todas las cookies ya entregadas.
 - Las comparaciones (contraseña y token) son de tiempo constante, sobre
   hashes de largo fijo.
+- **El acceso caduca por dos vías independientes.** La cookie es de
+  *sesión* (sin `maxAge`), así que el navegador la descarta al cerrarse; y
+  el token lleva su propia marca de tiempo firmada, con una validez de 15
+  minutos (`ACCESS_TTL_MS` en `lib/blog/token.ts`). Hacen falta las dos:
+  Chrome, Firefox y Safari restauran cookies de sesión al reabrirse
+  ("continuar donde lo dejaste"), así que confiar solo en la cookie deja
+  el acceso vivo. El TTL del servidor rechaza igual una cookie restaurada.
+  La marca de tiempo va *dentro* de la carga firmada, así que editarla
+  para estirar la sesión rompe la firma.
+- `lib/blog/token.ts` no importa nada de Next ni de Notion, justamente
+  para poder ejercitar esas reglas sin servidor ni red:
+
+  ```bash
+  npm run verify:access
+  ```
 - Leer cookies vuelve la ruta dinámica, así que **los posts protegidos
   pierden el ISR** y se renderizan por request. Los públicos conservan su
   cache.
