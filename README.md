@@ -91,6 +91,14 @@ npm run lint
   sitemap incluye home, `/blog` y **cada post publicado** por locale; si
   Notion falla en build, degrada a las rutas estáticas en vez de tumbar
   el deploy.
+- **`lastmod` solo cuando es verdad.** El sitemap se regenera cada hora,
+  así que un `new Date()` afirmaría que la home cambió hace una hora…
+  cada hora, para siempre. Google solo hace caso al `lastmod` mientras le
+  demuestres que es fiable: si le das ruido, descarta el campo para todo
+  el sitio — incluidos los posts, donde la fecha sí es real. Por eso la
+  home **omite** `lastmod`, `/blog` usa la fecha del post más reciente
+  (que es genuinamente cuándo cambió el listado), y un post sin
+  `Published Date` no reporta fecha en lugar de inventarla.
 - `public/llms.txt`: resumen estructurado del perfil y los proyectos
   para que asistentes de IA (ChatGPT, Claude, Perplexity...) puedan
   leer y citar el sitio correctamente; `robots.ts` los admite
