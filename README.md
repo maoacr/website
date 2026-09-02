@@ -103,3 +103,54 @@ npm run lint
   para que asistentes de IA (ChatGPT, Claude, Perplexity...) puedan
   leer y citar el sitio correctamente; `robots.ts` los admite
   explícitamente (GPTBot, ClaudeBot, PerplexityBot, etc.).
+
+## Entradas protegidas con contraseña
+
+Un post se protege agregándole una contraseña en la columna **`Password`**
+(rich text) de la database de Notion. La sola presencia de un valor ahí lo
+marca como protegido — no hay un checkbox aparte, así que el estado roto
+"marcado como privado pero sin clave" no puede existir. La columna es
+opcional: una database sin ella sigue funcionando igual.
+
+**Cómo funciona la protección** (`lib/blog/access.ts`):
+
+- El gate corre en el Server Component **antes** de pedirle el cuerpo del
+  post a Notion. Un visitante sin acceso recibe un HTML que nunca
+  contuvo el contenido — a diferencia de esconderlo con CSS o JS, donde
+  el texto ya viajó al navegador y se lee con "ver código fuente".
+- La cookie de acceso **no** es una bandera tipo `true`: eso lo falsifica
+  cualquiera con curl, porque las cookies son datos controlados por el
+  cliente. Es un HMAC del id del post, firmado con la contraseña de ese
+  mismo post. Consecuencia útil: cambiar la contraseña en Notion invalida
+  al instante todas las cookies ya entregadas.
+- Las comparaciones (contraseña y token) son de tiempo constante, sobre
+  hashes de largo fijo.
+- Leer cookies vuelve la ruta dinámica, así que **los posts protegidos
+  pierden el ISR** y se renderizan por request. Los públicos conservan su
+  cache.
+
+**Lo que se tapó para que no se filtre por los costados** — cada uno era
+una fuga real:
+
+- La meta description **no** se deriva del cuerpo en un post protegido
+  (`resolveDescription`), o publicaría sus primeras líneas en el `<head>`.
+  Si querés un teaser público, escribilo a mano en la columna `Excerpt`.
+- El listado y el sitemap usan `getPublicPosts`, que los excluye. El
+  listado le pasa sus posts a `BlogSearch`, un client component: sin ese
+  filtro, título, tags y excerpt viajarían al navegador de cualquiera.
+- La OG image se renderiza genérica (sin título, categoría ni fecha
+  reales). Esa imagen se sirve sin cookie porque los crawlers sociales no
+  pueden autenticarse.
+- Los posts protegidos van con `robots: noindex, nofollow`.
+
+**Limitaciones conocidas, a propósito:**
+
+- La contraseña se guarda en texto plano en Notion. Quien tenga acceso a
+  tu database las ve todas. Es el precio de tener una clave por post
+  editable desde Notion.
+- No hay rate limiting en los intentos. Para enlaces privados compartidos
+  a mano alcanza; si algún día esto protege algo sensible de verdad, hay
+  que agregarlo (Vercel Firewall o un contador por IP).
+- Los posts protegidos **no aparecen en el listado**: se llega solo por
+  URL directa. Si preferís mostrarlos con un candado, la nota en
+  `getPublicPosts` explica qué cambiar.

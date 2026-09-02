@@ -197,6 +197,17 @@ export const dictionaries = {
       metaTitle: "Blog",
       metaDescription:
         "Artículos y notas de Mario Crespo sobre desarrollo web y mobile, arquitectura de software, React, Next.js y dirección de arte digital.",
+      locked: {
+        slugline: "INT. BÓVEDA — ACCESO RESTRINGIDO",
+        title: "Esta entrada es privada",
+        description:
+          "Necesitas la contraseña para leerla. Si te compartieron este enlace, debieron darte también la clave.",
+        placeholder: "Contraseña",
+        submit: "Desbloquear",
+        pending: "Verificando...",
+        error: "Contraseña incorrecta.",
+        metaDescription: "Entrada privada, protegida con contraseña.",
+      },
     },
     footer: {
       rights: "Todos los derechos reservados.",
@@ -400,6 +411,17 @@ export const dictionaries = {
       metaTitle: "Blog",
       metaDescription:
         "Articles and notes by Mario Crespo on web and mobile development, software architecture, React, Next.js and digital art direction.",
+      locked: {
+        slugline: "INT. VAULT — RESTRICTED ACCESS",
+        title: "This entry is private",
+        description:
+          "You need the password to read it. If someone shared this link with you, they should have shared the password too.",
+        placeholder: "Password",
+        submit: "Unlock",
+        pending: "Checking...",
+        error: "Incorrect password.",
+        metaDescription: "Private entry, protected with a password.",
+      },
     },
     footer: {
       rights: "All rights reserved.",

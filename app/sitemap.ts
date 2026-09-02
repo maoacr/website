@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { locales, type Locale } from "@/lib/i18n/config";
 import { SITE_URL } from "@/lib/seo/site";
-import { getPublishedPosts } from "@/lib/notion/posts";
+import { getPublicPosts } from "@/lib/notion/posts";
 import type { BlogPost } from "@/lib/notion/types";
 
 // Regenerated on the same cadence as the blog pages, so newly published
@@ -24,7 +24,7 @@ function localeAlternates(path: string) {
 async function loadPostsByLocale(): Promise<Partial<Record<Locale, BlogPost[]>>> {
   try {
     const entries = await Promise.all(
-      locales.map(async (locale) => [locale, await getPublishedPosts(locale)] as const),
+      locales.map(async (locale) => [locale, await getPublicPosts(locale)] as const),
     );
     return Object.fromEntries(entries);
   } catch (error) {
