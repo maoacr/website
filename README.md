@@ -143,6 +143,19 @@ una fuga real:
   pueden autenticarse.
 - Los posts protegidos van con `robots: noindex, nofollow`.
 
+**Cómo saber la URL de un post protegido:**
+
+```bash
+npm run blog:urls
+```
+
+Imprime todas las filas de la database con su estado y su URL final —
+incluidas las protegidas, que justamente no aparecen ni en el listado ni
+en el sitemap, así que no hay dónde clickearlas. El slug es
+`slugify(título)` + los últimos 6 caracteres del id de la página, y el
+script importa `buildSlug` del mismo módulo que usa el sitio, así que las
+dos versiones no pueden divergir.
+
 **Limitaciones conocidas, a propósito:**
 
 - La contraseña se guarda en texto plano en Notion. Quien tenga acceso a
