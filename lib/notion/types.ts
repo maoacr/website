@@ -19,6 +19,16 @@ export type BlogPost = {
    * post page derives one from the first paragraph of the body.
    */
   excerpt: string | null;
+  /**
+   * True when the Notion row has a non-empty `Password` column.
+   *
+   * The password itself is deliberately NOT part of this type. `BlogPost`
+   * objects are handed to `BlogSearch`, a client component, so every
+   * field here ships to the browser — a secret on this type would be
+   * readable by anyone with devtools. Reading the actual password is a
+   * separate, server-only call: `getPostPassword` in posts.ts.
+   */
+  isProtected: boolean;
 };
 
 /**
