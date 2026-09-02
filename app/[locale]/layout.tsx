@@ -174,7 +174,10 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={`${archivo.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body id="top" className="min-h-full bg-bg text-fg selection:bg-signal">
+      <body
+        id="top"
+        className="flex min-h-dvh flex-col bg-bg text-fg selection:bg-signal"
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
