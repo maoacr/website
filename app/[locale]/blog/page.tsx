@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getPublishedPosts } from "@/lib/notion/posts";
+import { getPublicPosts } from "@/lib/notion/posts";
 import { SITE_URL, SITE_NAME, AUTHOR_NAME, OG_LOCALE, HTML_LANG } from "@/lib/seo/site";
 import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
@@ -68,10 +68,13 @@ export default async function BlogPage({
   const locale: Locale = rawLocale;
   const dict = getDictionary(locale);
 
-  // Filtered server-side, in the Notion query itself (see lib/notion/posts.ts)
-  // — Draft/In Review/Archived posts never leave the server, let alone
-  // reach this component's render output.
-  const posts = await getPublishedPosts(locale);
+  // Two filters, both server-side, both for the same reason: this array is
+  // handed to <BlogSearch>, a client component, so every field of every
+  // post here is delivered to the visitor's browser.
+  //   - Draft/In Review/Archived: excluded in the Notion query itself.
+  //   - Password-protected: excluded by getPublicPosts.
+  // Filtering in the UI instead would ship the titles and excerpts anyway.
+  const posts = await getPublicPosts(locale);
 
   // Blog + Breadcrumb structured data. The Blog node links every post back
   // to the same Person as the site root (`#person`), so Google reads the

@@ -10,6 +10,8 @@ import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { NotionBlockRenderer } from "@/components/blog/notion-block-renderer";
+import { PasswordGate } from "@/components/blog/password-gate";
+import { hasAccess } from "@/lib/blog/access";
 
 // Must be a literal, not an import — see the same note in ../page.tsx.
 // Keep this in sync with that file's revalidate value.
@@ -27,12 +29,19 @@ async function resolvePost(rawLocale: string, slug: string) {
  * Excerpt column if the database has one, otherwise the opening of the
  * post itself. Both reads are `cache()`d, so this costs no extra Notion
  * calls beyond what rendering the page already does.
+ *
+ * Protected posts never reach the body-derived branch. Deriving would
+ * publish the opening lines of a password-protected post into a meta
+ * description — readable in the page source without the password, and
+ * served straight to crawlers. An explicit `Excerpt` column is still
+ * honoured, because that text was written knowingly as a public teaser.
  */
 async function resolveDescription(
-  post: { id: string; excerpt: string | null },
+  post: { id: string; excerpt: string | null; isProtected: boolean },
   fallback: string,
 ): Promise<string> {
   if (post.excerpt) return post.excerpt;
+  if (post.isProtected) return fallback;
   const blocks = await getPageBlocks(post.id);
   return deriveExcerpt(blocks) ?? fallback;
 }
@@ -48,8 +57,29 @@ export async function generateMetadata({
 
   const { locale, post } = resolved;
   const dict = getDictionary(locale);
-  const description = await resolveDescription(post, dict.blog.metaDescription);
   const url = `${SITE_URL}/${locale}/blog/${slug}`;
+
+  // A protected post keeps its title (whoever has the link already sees
+  // it, and it makes the tab legible) but is kept out of the index: the
+  // point of the password is that this isn't for a general audience.
+  if (post.isProtected) {
+    return {
+      title: post.title,
+      description: post.excerpt ?? dict.blog.locked.metaDescription,
+      robots: { index: false, follow: false },
+      alternates: { canonical: `/${locale}/blog/${slug}` },
+      openGraph: {
+        type: "article",
+        title: post.title,
+        description: post.excerpt ?? dict.blog.locked.metaDescription,
+        url,
+        siteName: SITE_NAME,
+        locale: OG_LOCALE[locale],
+      },
+    };
+  }
+
+  const description = await resolveDescription(post, dict.blog.metaDescription);
 
   return {
     title: post.title,
@@ -99,6 +129,43 @@ export default async function BlogPostPage({
   if (!resolved) notFound();
   const { locale, post } = resolved;
   const dict = getDictionary(locale);
+
+  // The gate runs BEFORE the body is fetched. That ordering is the whole
+  // security model: an unauthorised visitor's response is built without
+  // the post's content ever being loaded, so there is nothing in the HTML
+  // to reveal with "view source" — unlike hiding it with CSS or JS, where
+  // the text has already reached the browser.
+  if (post.isProtected && !(await hasAccess(post.id))) {
+    return (
+      <>
+        <SiteNav locale={locale} dict={dict} />
+        <main className="mx-auto max-w-2xl px-4 pb-24 pt-32 sm:px-8">
+          <Link
+            href={`/${locale}/blog`}
+            className="font-mono text-xs uppercase tracking-wider text-muted hover:text-signal"
+          >
+            ← {dict.blog.back}
+          </Link>
+          <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-signal">
+            {dict.blog.locked.slugline}
+          </p>
+          <div className="mt-4">
+            <PasswordGate
+              locale={locale}
+              slug={slug}
+              title={dict.blog.locked.title}
+              description={dict.blog.locked.description}
+              placeholder={dict.blog.locked.placeholder}
+              submitLabel={dict.blog.locked.submit}
+              pendingLabel={dict.blog.locked.pending}
+              errorLabel={dict.blog.locked.error}
+            />
+          </div>
+        </main>
+        <SiteFooter dict={dict} />
+      </>
+    );
+  }
 
   const blocks = await getPageBlocks(post.id);
   const description = await resolveDescription(post, dict.blog.metaDescription);

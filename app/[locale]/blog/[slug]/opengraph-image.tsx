@@ -29,14 +29,21 @@ export default async function BlogPostOpengraphImage({
   const dict = getDictionary(locale);
   const post = await getPostBySlug(locale, slug);
 
-  const title = post?.title ?? dict.blog.metaTitle;
-  const formattedDate = post?.publishedDate
-    ? new Date(post.publishedDate).toLocaleDateString(dict.blog.dateLocale, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : null;
+  // A protected post's card is generic. This image is served without any
+  // cookie check — it has to be, since social crawlers can't authenticate
+  // — so rendering the real title here would publish it to anyone who
+  // requests the image URL directly.
+  const isLocked = post?.isProtected ?? false;
+
+  const title = isLocked ? dict.blog.locked.title : (post?.title ?? dict.blog.metaTitle);
+  const formattedDate =
+    post?.publishedDate && !isLocked
+      ? new Date(post.publishedDate).toLocaleDateString(dict.blog.dateLocale, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : null;
 
   // Long headlines have to shrink or they overflow the card — Satori has
   // no text-fitting of its own, so the size is chosen up front.
@@ -64,7 +71,9 @@ export default async function BlogPostOpengraphImage({
               color: SIGNAL,
             }}
           >
-            {post?.category ?? dict.blog.metaTitle}
+            {isLocked
+              ? dict.blog.locked.slugline
+              : (post?.category ?? dict.blog.metaTitle)}
           </div>
           {formattedDate && (
             <div style={{ fontSize: 24, color: MUTED, marginLeft: 24 }}>
@@ -96,7 +105,7 @@ export default async function BlogPostOpengraphImage({
           }}
         >
           <div style={{ fontSize: 28, color: FOG }}>
-            {post?.author ?? AUTHOR_NAME}
+            {isLocked ? AUTHOR_NAME : (post?.author ?? AUTHOR_NAME)}
           </div>
           <div style={{ fontSize: 26, color: MUTED, letterSpacing: 2 }}>
             {SITE_URL.replace("https://", "")}

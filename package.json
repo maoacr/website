@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "blog:urls": "node --experimental-strip-types --env-file=.env.local scripts/blog-urls.ts"
   },
   "dependencies": {
     "@notionhq/client": "^5.25.2",

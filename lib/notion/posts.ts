@@ -83,6 +83,11 @@ function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
       ? excerptProp.rich_text.map((t) => t.plain_text).join("").trim() || null
       : null;
 
+  // Presence of a password IS the "protected" flag — no separate checkbox
+  // column, so the broken state (flag on, no password) can't exist. Only
+  // the boolean crosses into BlogPost; see the note on the type.
+  const isProtected = readPassword(props) !== null;
+
   return {
     id: page.id,
     slug: buildSlug(title, page.id),
@@ -93,7 +98,21 @@ function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
     publishedDate,
     lang: locale,
     excerpt,
+    isProtected,
   };
+}
+
+/**
+ * Reads the optional `Password` column off a raw Notion page.
+ *
+ * Kept as a standalone helper (rather than folded into `mapPage`) so the
+ * secret only ever exists inside server-only call paths, and never on the
+ * `BlogPost` object that gets serialized to the client.
+ */
+function readPassword(props: PageObjectResponse["properties"]): string | null {
+  const prop = props.Password;
+  if (prop?.type !== "rich_text") return null;
+  return prop.rich_text.map((t) => t.plain_text).join("").trim() || null;
 }
 
 /**
@@ -121,6 +140,39 @@ export const getPublishedPosts = cache(async function getPublishedPosts(
   } while (cursor);
 
   return pages.map((page) => mapPage(page, locale));
+});
+
+/**
+ * Posts safe to render in public surfaces — the blog listing and the
+ * sitemap.
+ *
+ * Protected posts are reachable only by their direct URL, so they are
+ * excluded here rather than shown behind a lock. This matters more than
+ * it looks: the listing hands its posts to `BlogSearch`, a client
+ * component, so anything in this array (title, category, tags, excerpt)
+ * is delivered to every visitor's browser. Filtering at the source is
+ * what keeps a protected post's metadata out of that payload — the same
+ * reason drafts are filtered in the Notion query rather than in the UI.
+ *
+ * To instead advertise protected posts with a lock badge, render from
+ * `getPublishedPosts` and strip `excerpt` — but decide that deliberately.
+ */
+export const getPublicPosts = cache(async function getPublicPosts(
+  locale: Locale,
+): Promise<BlogPost[]> {
+  const posts = await getPublishedPosts(locale);
+  return posts.filter((post) => !post.isProtected);
+});
+
+/**
+ * Server-only read of a post's password. Never call this from anything
+ * whose result reaches the client.
+ */
+export const getPostPassword = cache(async function getPostPassword(
+  postId: string,
+): Promise<string | null> {
+  const page = await notion.pages.retrieve({ page_id: postId });
+  return isFullPage(page) ? readPassword(page.properties) : null;
 });
 
 /**
