@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="El sistema de diseño de maoacr.com extraído del código desplegado: tokens, tipografía, componentes de facto y las decisiones detrás de cada uno.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Hoja de Rodaje">
+<meta property="og:description" content="El sistema de diseño de maoacr.com, extraído del código desplegado.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://maoacr.com/hoja-de-rodaje.html">
+<link rel="canonical" href="https://maoacr.com/hoja-de-rodaje.html">
+<title>Hoja de Rodaje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+</head>
+<body>
+<style>
+  /* ---- Tokens: la paleta real de maoacr.com, verbatim ---- */
+  :root {
+    --paper:    #f5f5f2;
+    --graphite: #0a0a0c;
+    --ink:      #111214;
+    --fog:      #e8e7e2;
+    --signal:   #ff4520;
+    --paramo:   #2f6e5c;
+    --line:     #d8d6ce;
+
+    --bg:      var(--paper);
+    --fg:      var(--ink);
+    --border:  var(--line);
+    --surface: #ffffff;
+    --muted:   #6b6a64;
+
+    /* Derivados solo de esta página */
+    --rail:    rgba(17, 18, 20, .06);
+    --shadow:  0 1px 2px rgba(17,18,20,.04);
+
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --sans:    "Inter", "Helvetica Neue", Arial, sans-serif;
+    --mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --measure: 68ch;
+    --ease:    cubic-bezier(.65, 0, .35, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:      var(--graphite);
+      --fg:      var(--fog);
+      --border:  #232326;
+      --surface: #131315;
+      --muted:   #97968f;
+      --rail:    rgba(232,231,226,.07);
+      --shadow:  none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:      var(--graphite);
+    --fg:      var(--fog);
+    --border:  #232326;
+    --surface: #131315;
+    --muted:   #97968f;
+    --rail:    rgba(232,231,226,.07);
+    --shadow:  none;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px 96px; }
+
+  /* ---- Motivo firma: perforaciones de 35mm ---- */
+  .filmstrip {
+    background-image: radial-gradient(circle, var(--border) 1.5px, transparent 1.5px);
+    background-size: 14px 14px;
+    background-position: left center;
+    background-repeat: repeat-x;
+    height: 14px;
+  }
+
+  /* ---- Cabecera ---- */
+  header { padding: 72px 0 40px; }
+  .rec {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .2em; color: var(--signal);
+  }
+  .rec i {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--signal); display: inline-block;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(40px, 7vw, 76px);
+    font-weight: 600; letter-spacing: -.03em; line-height: 1.02;
+    margin: 20px 0 0; text-wrap: balance;
+  }
+  .standfirst {
+    max-width: var(--measure); margin: 20px 0 0;
+    font-size: 17px; color: var(--muted);
+  }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 28px 0 0;
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .12em; color: var(--muted);
+  }
+  .meta b { color: var(--fg); font-weight: 500; }
+
+  /* ---- Escenas ---- */
+  section { padding: 56px 0 0; }
+  .slate {
+    display: flex; align-items: baseline; gap: 16px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .tc {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  .slugline {
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .2em; color: var(--signal);
+  }
+  h2 {
+    font-family: var(--display); font-size: 30px; font-weight: 600;
+    letter-spacing: -.02em; margin: 18px 0 0; text-wrap: balance;
+  }
+  .lede { max-width: var(--measure); margin: 10px 0 0; color: var(--muted); }
+
+  h3 {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .2em;
+    color: var(--muted); margin: 36px 0 14px;
+  }
+
+  p { max-width: var(--measure); }
+  a { color: var(--signal); text-decoration-color: color-mix(in srgb, var(--signal) 40%, transparent); text-underline-offset: 2px; }
+  code {
+    font-family: var(--mono); font-size: .88em;
+    background: var(--rail); padding: 2px 6px; border-radius: 4px;
+  }
+
+  /* ---- Muestras de color ---- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+  .sw { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .sw .chip { height: 76px; display: block; }
+  .sw .info { padding: 10px 12px 12px; }
+  .sw .name { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; }
+  .sw .hex { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-variant-numeric: tabular-nums; }
+
+  /* ---- Tabla semántica ---- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; }
+  th, td {
+    text-align: left; padding: 11px 14px; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .16em; color: var(--muted);
+    background: var(--rail);
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.mono, th.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .dot { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--border); vertical-align: -1px; margin-right: 7px; }
+
+  /* ---- Espécimen tipográfico ---- */
+  .faces { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .face { border: 1px solid var(--border); border-radius: 12px; padding: 20px; background: var(--surface); }
+  .face .role { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .18em; color: var(--signal); }
+  .face .spec { font-size: 44px; line-height: 1.1; margin: 12px 0 8px; letter-spacing: -.02em; }
+  .face .note { font-size: 12.5px; color: var(--muted); }
+  .face .count { font-family: var(--mono); font-size: 11px; color: var(--fg); }
+
+  .scale { display: grid; gap: 2px; }
+  .scale .row {
+    display: grid; grid-template-columns: 92px 60px 1fr; align-items: baseline;
+    gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--border);
+  }
+  .scale .row:last-child { border-bottom: 0; }
+  .scale .tok { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .scale .n { font-family: var(--mono); font-size: 11px; color: var(--signal); font-variant-numeric: tabular-nums; }
+
+  /* ---- Componentes de facto ---- */
+  .specimen {
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    background: var(--surface); margin-bottom: 16px;
+  }
+  .specimen .stage {
+    padding: 26px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    background: var(--bg);
+  }
+  .specimen .code {
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.7;
+    padding: 12px 14px; border-top: 1px solid var(--border);
+    color: var(--muted); overflow-x: auto; white-space: pre;
+  }
+  .specimen .code b { color: var(--fg); font-weight: 500; }
+
+  /* Réplicas exactas de los patrones del sitio */
+  .ds-pill {
+    border-radius: 999px; border: 1px solid var(--border);
+    padding: 4px 10px; font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+  }
+  .ds-btn {
+    border-radius: 999px; border: 1px solid var(--border); background: none;
+    padding: 6px 12px; font-family: var(--mono); font-size: 12px;
+    text-transform: uppercase; letter-spacing: .08em; color: var(--fg);
+    cursor: pointer; transition: color .2s var(--ease), border-color .2s var(--ease);
+  }
+  .ds-btn:hover { color: var(--signal); border-color: var(--signal); }
+  .ds-btn-solid {
+    border-radius: 12px; border: 1px solid var(--signal); background: var(--signal);
+    padding: 12px 20px; font-family: var(--mono); font-size: 12px;
+    text-transform: uppercase; letter-spacing: .08em; color: #fff; cursor: pointer;
+  }
+  .ds-input {
+    border-radius: 12px; border: 1px solid var(--border); background: var(--surface);
+    padding: 12px 16px; font-size: 14px; color: var(--fg);
+    font-family: var(--sans); width: 100%; max-width: 320px;
+  }
+  .ds-input::placeholder { color: var(--muted); }
+  .ds-input:focus { outline: none; border-color: var(--signal); }
+  .ds-card {
+    border-radius: 16px; border: 1px solid var(--border); background: var(--surface);
+    padding: 22px; max-width: 330px;
+  }
+  .ds-card .k {
+    display: flex; gap: 10px; font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+  }
+  .ds-card .k .cat { color: var(--signal); }
+  .ds-card h4 { font-family: var(--display); font-size: 20px; font-weight: 600; margin: 12px 0 0; letter-spacing: -.01em; }
+  .ds-eyebrow {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: .2em; color: var(--signal);
+  }
+
+  /* ---- Ejes del brief ---- */
+  .axes { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 24px; }
+  .axis { border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; background: var(--surface); }
+  .axis .tag {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--muted);
+  }
+  .axis.gap { border-color: var(--signal); }
+  .axis.gap .tag { color: var(--signal); }
+  .axis h4 { font-family: var(--display); font-size: 17px; font-weight: 600; margin: 8px 0 6px; }
+  .axis p { font-size: 13.5px; color: var(--muted); margin: 0; max-width: none; }
+  .axis b { color: var(--fg); font-weight: 500; }
+
+  /* ---- Hallazgos ---- */
+  .finding {
+    border: 1px solid var(--border); border-left: 3px solid var(--signal);
+    border-radius: 0 12px 12px 0; padding: 18px 20px; background: var(--surface);
+    margin-bottom: 12px;
+  }
+  .finding.calm { border-left-color: var(--muted); }
+  .finding .tag {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--signal);
+  }
+  .finding.calm .tag { color: var(--muted); }
+  .finding h4 { font-family: var(--display); font-size: 18px; font-weight: 600; margin: 8px 0 6px; }
+  .finding p { font-size: 14px; margin: 0; color: var(--muted); max-width: none; }
+  .finding p + p { margin-top: 8px; }
+  .finding b { color: var(--fg); font-weight: 500; }
+
+  /* ---- Pasos de rebrand ---- */
+  .steps { display: grid; gap: 10px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: 34px 1fr; gap: 16px;
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; background: var(--surface);
+  }
+  .step::before {
+    counter-increment: step; content: counter(step, decimal-leading-zero);
+    font-family: var(--mono); font-size: 12px; color: var(--signal);
+    font-variant-numeric: tabular-nums;
+  }
+  .step h4 { font-family: var(--display); font-size: 17px; font-weight: 600; margin: 0 0 6px; }
+  .step p { font-size: 14px; color: var(--muted); margin: 0; max-width: none; }
+  .step .files { font-family: var(--mono); font-size: 11px; color: var(--fg); margin-top: 8px; }
+
+  footer {
+    margin-top: 72px; padding-top: 20px; border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: .14em; color: var(--muted);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="rec"><i></i> REC · maoacr.com</div>
+    <h1>Hoja de Rodaje</h1>
+    <p class="standfirst">
+      El sistema de diseño de maoacr.com, extraído del código desplegado. No es una
+      propuesta: es lo que el sitio <em>ya</em> hace, contado en su propio vocabulario para
+      que reemplazar la identidad sea cambiar tokens y no cazar clases por veinte archivos.
+    </p>
+    <div class="meta">
+      <span>Fuente · <b>22 componentes + globals.css</b></span>
+      <span>Framework · <b>Next.js 16 · Tailwind v4</b></span>
+      <span>Tokens vivos · <b>7 color · 3 tipografía · 1 curva</b></span>
+      <span>Ejes de identidad · <b>2 de 3 cubiertos</b></span>
+    </div>
+  </header>
+
+  <div class="filmstrip"></div>
+
+  <!-- ============ 00 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:00:00:00</span>
+      <span class="slugline">INT. MONTAJE — CÓMO APLICAR TU MARCA</span>
+    </div>
+    <h2>Dónde tocar cuando llegue la identidad nueva</h2>
+    <p class="lede">
+      Empieza por acá. El resto del documento describe el sistema; esta sección dice
+      qué archivos abrir el día que traigas la paleta y las tipografías de Claude Design.
+    </p>
+
+    <div class="steps" style="margin-top:24px">
+      <div class="step">
+        <div>
+          <h4>Cambiá las primitivas, no los semánticos</h4>
+          <p>
+            Las siete variables de <code>:root</code> son las únicas con valores literales.
+            Todo lo demás las referencia. Reemplazá ahí y el sitio entero se mueve — incluidos
+            modo claro y oscuro, porque ambos apuntan a las mismas primitivas.
+          </p>
+          <p style="margin-top:8px">
+            Las OpenGraph images y el manifest no pueden leer CSS y llevan la paleta como
+            literales de TypeScript. Ya están apuntadas a <code>lib/brand.ts</code>, y
+            <code>npm run verify:brand</code> falla si las dos fuentes divergen — así que
+            <b>cambiá las dos y el chequeo te cubre</b>.
+          </p>
+          <div class="files">app/globals.css líneas 4–10 · lib/brand.ts</div>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h4>Cambiá las tres tipografías en un solo lugar</h4>
+          <p>
+            Las fuentes se cargan autoalojadas y se exponen como <code>--font-display</code>,
+            <code>--font-sans</code> y <code>--font-mono</code>. Reemplazá los archivos y
+            actualizá los <code>localFont</code>: ningún componente nombra una tipografía directamente.
+          </p>
+          <div class="files">assets/fonts/ · app/[locale]/layout.tsx · globals.css</div>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h4>Decidí qué pasa con el motivo de cine</h4>
+          <p>
+            El slugline, el timecode a 24fps y las perforaciones de 35mm no son estilo:
+            son la tesis del sitio. Si tu marca nueva va por otro lado, esto no se
+            re-colorea — se reemplaza por su equivalente conceptual, o se retira.
+          </p>
+          <div class="files">scene-heading.tsx · timecode-hud.tsx · .filmstrip-rule</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:01:04:12</span>
+      <span class="slugline">INT. PALETA — DÍA / NOCHE</span>
+    </div>
+    <h2>Color</h2>
+    <p class="lede">
+      Siete primitivas nombradas con el mundo del sitio — papel, grafito, tinta, niebla,
+      línea — y cinco semánticas que se reasignan entre temas. Los componentes solo tocan
+      las semánticas; por eso el modo oscuro no requiere una sola clase condicional.
+    </p>
+
+    <h3>Primitivas</h3>
+    <div class="swatches">
+      <div class="sw"><span class="chip" style="background:#f5f5f2"></span><div class="info"><div class="name">--paper</div><div class="hex">#f5f5f2</div></div></div>
+      <div class="sw"><span class="chip" style="background:#0a0a0c"></span><div class="info"><div class="name">--graphite</div><div class="hex">#0a0a0c</div></div></div>
+      <div class="sw"><span class="chip" style="background:#111214"></span><div class="info"><div class="name">--ink</div><div class="hex">#111214</div></div></div>
+      <div class="sw"><span class="chip" style="background:#e8e7e2"></span><div class="info"><div class="name">--fog</div><div class="hex">#e8e7e2</div></div></div>
+      <div class="sw"><span class="chip" style="background:#ff4520"></span><div class="info"><div class="name">--signal</div><div class="hex">#ff4520</div></div></div>
+      <div class="sw"><span class="chip" style="background:#d8d6ce"></span><div class="info"><div class="name">--line</div><div class="hex">#d8d6ce</div></div></div>
+      <div class="sw" style="opacity:.55"><span class="chip" style="background:#2f6e5c"></span><div class="info"><div class="name">--paramo</div><div class="hex">#2f6e5c · sin uso</div></div></div>
+    </div>
+
+    <h3>Semánticas · qué apunta a qué en cada tema</h3>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Token</th><th>Claro</th><th>Oscuro</th><th class="mono">Usos</th><th>Rol</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">--bg</td>
+            <td class="mono"><span class="dot" style="background:#f5f5f2"></span>paper</td>
+            <td class="mono"><span class="dot" style="background:#0a0a0c"></span>graphite</td>
+            <td class="mono">4</td><td>Fondo de página</td>
+          </tr>
+          <tr>
+            <td class="mono">--fg</td>
+            <td class="mono"><span class="dot" style="background:#111214"></span>ink</td>
+            <td class="mono"><span class="dot" style="background:#e8e7e2"></span>fog</td>
+            <td class="mono">29</td><td>Texto principal</td>
+          </tr>
+          <tr>
+            <td class="mono">--surface</td>
+            <td class="mono"><span class="dot" style="background:#ffffff"></span>#ffffff</td>
+            <td class="mono"><span class="dot" style="background:#131315"></span>#131315</td>
+            <td class="mono">7</td><td>Tarjetas, inputs</td>
+          </tr>
+          <tr>
+            <td class="mono">--border</td>
+            <td class="mono"><span class="dot" style="background:#d8d6ce"></span>line</td>
+            <td class="mono"><span class="dot" style="background:#232326"></span>#232326</td>
+            <td class="mono">32</td><td>Todo contorno</td>
+          </tr>
+          <tr>
+            <td class="mono">--muted</td>
+            <td class="mono"><span class="dot" style="background:#6b6a64"></span>#6b6a64</td>
+            <td class="mono"><span class="dot" style="background:#97968f"></span>#97968f</td>
+            <td class="mono">43</td><td>Texto secundario</td>
+          </tr>
+          <tr>
+            <td class="mono">--signal</td>
+            <td class="mono"><span class="dot" style="background:#ff4520"></span>#ff4520</td>
+            <td class="mono"><span class="dot" style="background:#ff4520"></span>idéntico</td>
+            <td class="mono">58</td><td>Acento único</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:var(--muted)">
+      <b style="color:var(--fg)">El dato que manda:</b> <code>--muted</code> (37 usos) y
+      <code>--border</code> (28) superan a <code>--fg</code> (22). El sitio se sostiene con
+      grises y contornos finos, y reserva el rojo para 45 acentos puntuales. Una marca nueva
+      con un acento más suave va a sentirse plana acá si no se recalibra ese contraste.
+    </p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:03:18:07</span>
+      <span class="slugline">INT. TIPOGRAFÍA — TRES VOCES</span>
+    </div>
+    <h2>Tipografía</h2>
+    <p class="lede">
+      Tres familias con roles que no se pisan. La sorpresa de la auditoría: la monoespaciada
+      no es la voz de apoyo, es la dominante.
+    </p>
+
+    <div class="faces">
+      <div class="face">
+        <div class="role">Display · Archivo</div>
+        <div class="spec" style="font-family:var(--display); font-weight:600">Aa</div>
+        <div class="count">12 usos</div>
+        <p class="note" style="margin:6px 0 0">Solo titulares. Siempre con <code>tracking-tight</code>: la voz que grita.</p>
+      </div>
+      <div class="face">
+        <div class="role">Cuerpo · Inter</div>
+        <div class="spec" style="font-family:var(--sans)">Aa</div>
+        <div class="count">Por defecto en body</div>
+        <p class="note" style="margin:6px 0 0">Nunca se declara en un componente. Se hereda, y por eso no aparece contada.</p>
+      </div>
+      <div class="face">
+        <div class="role">Utilidad · JetBrains Mono</div>
+        <div class="spec" style="font-family:var(--mono); font-weight:500">Aa</div>
+        <div class="count" style="color:var(--signal)">50 usos — la voz dominante</div>
+        <p class="note" style="margin:6px 0 0">Sluglines, tags, timecode, nav, footer. Es la textura del sitio.</p>
+      </div>
+    </div>
+
+    <h3>Escala real en uso · ordenada por frecuencia</h3>
+    <div class="scale">
+      <div class="row"><span class="tok">text-xs</span><span class="n">25</span><span style="font-size:12px">Nav, botones, etiquetas de interfaz</span></div>
+      <div class="row"><span class="tok">text-sm</span><span class="n">14</span><span style="font-size:14px">Párrafos secundarios, resúmenes</span></div>
+      <div class="row"><span class="tok">text-[11px]</span><span class="n">9</span><span style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.2em">Slugline de escena</span></div>
+      <div class="row"><span class="tok">text-xl</span><span class="n">5</span><span style="font-family:var(--display);font-size:20px;font-weight:600">Título de tarjeta</span></div>
+      <div class="row"><span class="tok">text-[10px]</span><span class="n">5</span><span style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em">Tags y píldoras</span></div>
+      <div class="row"><span class="tok">text-2xl</span><span class="n">4</span><span style="font-family:var(--display);font-size:24px;font-weight:600">Subtítulo</span></div>
+      <div class="row"><span class="tok">text-4xl / 5xl</span><span class="n">5</span><span style="font-family:var(--display);font-size:34px;font-weight:600;letter-spacing:-.02em">Titular de sección</span></div>
+      <div class="row"><span class="tok">text-[13vw]</span><span class="n">1</span><span style="font-size:13px;color:var(--muted)">Fluido — solo el nombre en el hero</span></div>
+    </div>
+
+    <h3>Tracking · el detalle que hace la voz</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Valor</th><th class="mono">Usos</th><th>Regla observada</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">tracking-wider</td><td class="mono">22</td><td>Mono en mayúsculas, tamaño normal</td></tr>
+          <tr><td class="mono">tracking-[0.2em]</td><td class="mono">8</td><td>Sluglines — el más abierto, reservado</td></tr>
+          <tr><td class="mono">tracking-tight</td><td class="mono">6</td><td>Exclusivo de titulares en Archivo</td></tr>
+          <tr><td class="mono">tracking-wide</td><td class="mono">5</td><td>Píldoras de 10px</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:var(--muted)">
+      La regla no escrita: <b style="color:var(--fg)">display aprieta, mono abre</b>. Titulares
+      siempre negativos; mono siempre positivo, y cuanto más chico el texto, más abierto el
+      tracking. Cualquier tipografía nueva tiene que respetar esa oposición o el sitio pierde su ritmo.
+    </p>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:06:02:19</span>
+      <span class="slugline">EXT. COMPONENTES — INVENTARIO</span>
+    </div>
+    <h2>Componentes de facto</h2>
+    <p class="lede">
+      Ninguno existe como componente aislado en el código: son combinaciones de clases que
+      se repiten. Documentarlos es el primer paso para que dejen de divergir.
+    </p>
+
+    <h3>Slugline · el marcador de escena</h3>
+    <div class="specimen">
+      <div class="stage"><span class="ds-eyebrow">INT. ESTUDIO — DÍA 1</span></div>
+      <div class="code">font-mono <b>text-[11px]</b> uppercase <b>tracking-[0.2em]</b> text-signal</div>
+    </div>
+
+    <h3>Píldora · tags y stack</h3>
+    <div class="specimen">
+      <div class="stage">
+        <span class="ds-pill">React</span>
+        <span class="ds-pill">Next.js</span>
+        <span class="ds-pill">TypeScript</span>
+      </div>
+      <div class="code"><b>rounded-full</b> border border-border px-2.5 py-1 font-mono <b>text-[10px]</b> uppercase tracking-wide text-muted</div>
+    </div>
+
+    <h3>Botón · nav y acción</h3>
+    <div class="specimen">
+      <div class="stage">
+        <button class="ds-btn">ES / en</button>
+        <button class="ds-btn-solid">Desbloquear</button>
+      </div>
+      <div class="code">nav:    <b>rounded-full</b> border border-border px-3 py-1.5 font-mono text-xs uppercase tracking-wider
+acción: <b>rounded-xl</b> border-signal bg-signal px-5 py-3 font-mono text-xs uppercase</div>
+    </div>
+
+    <h3>Campo de texto</h3>
+    <div class="specimen">
+      <div class="stage"><input class="ds-input" type="text" placeholder="Buscar por título, categoría, tag o autor..." aria-label="Ejemplo de campo de búsqueda"></div>
+      <div class="code"><b>rounded-xl</b> border border-border <b style="color:var(--signal)">bg-surface | bg-bg</b> px-4 py-3 text-sm placeholder:text-muted focus:border-signal</div>
+    </div>
+
+    <h3>Tarjeta</h3>
+    <div class="specimen">
+      <div class="stage">
+        <div class="ds-card">
+          <div class="k"><span class="cat">Personal Development</span><span>22 dic 2023</span></div>
+          <h4>Bienvenidos a mi mundo</h4>
+          <div style="margin-top:14px; display:flex; gap:6px"><span class="ds-pill">Personal</span></div>
+        </div>
+      </div>
+      <div class="code"><b>rounded-2xl</b> border border-border bg-surface p-6 transition-colors hover:border-signal/60</div>
+    </div>
+
+    <h3>Utilidades con nombre · lo que no cabe en Tailwind</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Clase</th><th>Qué hace</th><th>El dial</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">.nav-glass</td>
+            <td>Vidrio del nav flotante. El <code>saturate(180%)</code> es lo que lo vuelve vidrio y no panel translúcido: mantiene vivo el color que pasa por debajo. Fondo 74% claro / 95% oscuro — asimétrico porque el texto claro sobre fondo oscuro atraviesa mucho más.</td>
+            <td class="mono">--nav-blur<br>48px</td>
+          </tr>
+          <tr>
+            <td class="mono">.caret-blink</td>
+            <td>Cursor del cold open y de "Fin.". Parpadeo duro con <code>step-end</code>, no <code>animate-pulse</code>: el fade suave de Tailwind se lee como skeleton loader.</td>
+            <td class="mono">1.06s</td>
+          </tr>
+          <tr>
+            <td class="mono">.filmstrip-rule</td>
+            <td>Perforaciones de 35mm como separador. El motivo firma.</td>
+            <td class="mono">14px</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:var(--muted)">
+      En el vidrio, <b style="color:var(--fg)">subí el blur, nunca la opacidad</b>: pasado
+      ~80% opaco deja de ser vidrio y es una barra sólida con sombra. Y ojo con un detalle
+      que rompe el efecto en silencio — un ancestro con <code>opacity</code> menor a 1
+      establece un <em>backdrop root</em>, y el <code>backdrop-filter</code> pasa a
+      desenfocar la nada.
+    </p>
+
+    <h3>Radios · solo tres, y con significado</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Radio</th><th class="mono">Usos</th><th>Qué señala</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">rounded-full</td><td class="mono">21</td><td>Controles y etiquetas — cosas que se tocan o se leen al vuelo</td></tr>
+          <tr><td class="mono">rounded-xl</td><td class="mono">6</td><td>Campos e imágenes — cosas que reciben contenido</td></tr>
+          <tr><td class="mono">rounded-2xl</td><td class="mono">4</td><td>Tarjetas — el contenedor más grande</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:var(--muted)">
+      El radio crece con el tamaño del objeto. Es una jerarquía consistente, y funciona.
+    </p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:09:11:03</span>
+      <span class="slugline">INT. MOVIMIENTO — 24 FPS</span>
+    </div>
+    <h2>Movimiento</h2>
+    <p class="lede">
+      Una sola curva gobierna todo el sitio, y aparece tanto en las revelaciones de scroll
+      como en las View Transitions de tema e idioma. Ese es el corte del montaje.
+    </p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Constante</th><th class="mono">Valor</th><th class="mono">Usos</th><th>Dónde</th></tr></thead>
+        <tbody>
+          <tr><td>Curva firma</td><td class="mono">cubic-bezier(.65, 0, .35, 1)</td><td class="mono">7</td><td>Revelaciones + cambio de tema/idioma</td></tr>
+          <tr><td>Duración base</td><td class="mono">0.6s</td><td class="mono">9</td><td>Entrada de secciones</td></tr>
+          <tr><td>Duración corte</td><td class="mono">0.5s</td><td class="mono">3</td><td>View Transition de root</td></tr>
+          <tr><td>Distancia de entrada</td><td class="mono">y: 16px</td><td class="mono">7</td><td>Desplazamiento del reveal</td></tr>
+          <tr><td>Umbral de viewport</td><td class="mono">-10% 0px</td><td class="mono">6</td><td>Cuándo dispara el reveal</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:var(--muted)">
+      La curva ya es el token <code>--ease-cut</code>, que usan las View Transitions, el
+      reveal del nav y la aparición del botón de play. <b style="color:var(--fg)">Framer
+      Motion sigue repitiéndola</b> como array de JS en <code>hero.tsx</code> y
+      <code>scene-heading.tsx</code> — no puede leer CSS, así que esa duplicación es
+      irreducible, igual que la de la paleta.
+    </p>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:11:20:16</span>
+      <span class="slugline">EXT. LAYOUT — ENCUADRE</span>
+    </div>
+    <h2>Medida y encuadre</h2>
+    <p class="lede">
+      Cuatro anchos de contenedor, cada uno elegido por el trabajo que hace el contenido.
+    </p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Contenedor</th><th class="mono">Ancho</th><th class="mono">Usos</th><th>Por qué</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">max-w-6xl</td><td class="mono">1152px</td><td class="mono">8</td><td>Secciones del portafolio y nav</td></tr>
+          <tr><td class="mono">max-w-4xl</td><td class="mono">896px</td><td class="mono">1</td><td>Índice del blog — grilla de dos columnas</td></tr>
+          <tr><td class="mono">max-w-2xl</td><td class="mono">672px</td><td class="mono">3</td><td>Cuerpo del post — 65–75 caracteres por línea</td></tr>
+          <tr><td class="mono">max-w-xl</td><td class="mono">576px</td><td class="mono">6</td><td>Bajadas y textos de apoyo</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:var(--muted)">
+      El <code>max-w-2xl</code> del cuerpo del post no es arbitrario: es la medida clásica de
+      lectura, entre 50 y 75 caracteres por línea. Con menos, el ojo salta de renglón
+      demasiado seguido; con más, se pierde al volver al margen izquierdo. Cualquier cambio
+      de tipografía mueve ese cálculo — <b style="color:var(--fg)">revisá la medida cuando
+      cambies la fuente de cuerpo</b>, no después.
+    </p>
+
+    <h3>Padding de sección · el ritmo vertical</h3>
+    <p style="font-size:14px; color:var(--muted)">
+      <code>py-32</code> y <code>py-24</code> dominan el respiro entre escenas.
+      Horizontal siempre <code>px-4</code>, que pasa a <code>px-8</code> desde
+      <code>sm:</code> — dos valores, sin excepciones.
+    </p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:14:07:22</span>
+      <span class="slugline">INT. AUDITORÍA — NOTAS DE RODAJE</span>
+    </div>
+    <h2>Lo que hay que arreglar antes del rebrand</h2>
+    <p class="lede">
+      Tres hallazgos de la auditoría. El primero es el único que puede arruinarte el
+      lanzamiento de la marca nueva.
+    </p>
+
+    <div class="finding calm">
+      <div class="tag">Limpieza</div>
+      <h4><code>--paramo</code> está declarado pero no se usa en ningún lado</h4>
+      <p>
+        Vive en <code>:root</code> y está expuesto vía <code>@theme inline</code> como
+        <code>color-paramo</code>, listo para usar — pero cero apariciones en 19 componentes.
+        O era un segundo acento que nunca llegó, o quedó de una iteración anterior. Decidí si
+        entra en la marca nueva o si se va.
+      </p>
+    </div>
+
+    <div class="finding calm">
+      <div class="tag">Divergencia</div>
+      <h4>Los dos campos de texto usan fondos distintos</h4>
+      <p>
+        El buscador del blog es <code>bg-surface</code>; el del gate de contraseña es
+        <code>bg-bg</code>. Mismo patrón, misma función, dos tokens. Nadie lo decidió: es
+        deriva por copiar y pegar, y es exactamente lo que este documento existe para frenar.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="slate">
+      <span class="tc">00:17:23:09</span>
+      <span class="slugline">EXT. GUION — BRIEF PARA LA MARCA</span>
+    </div>
+    <h2>Tres ejes, no dos</h2>
+    <p class="lede">
+      La metáfora de cine se queda: la monoespaciada es un doble significante — dice
+      <em>timecode y claqueta</em> y dice <em>terminal y editor</em>, sin elegir. La mayoría
+      de los portafolios se casa con un mundo; este tiene una tipografía que pertenece
+      legítimamente a los dos. Eso no se fabrica.
+    </p>
+
+    <div class="axes">
+      <div class="axis covered">
+        <div class="tag">Cubierto</div>
+        <h4>Herencia audiovisual</h4>
+        <p>Slugline, timecode a 24fps, perforaciones de 35mm. La metáfora lo dice sin escribirlo.</p>
+      </div>
+      <div class="axis covered">
+        <div class="tag">Cubierto</div>
+        <h4>Ingeniería de software</h4>
+        <p>La mono lo carga sola. El oficio se demuestra en el código y en el sistema.</p>
+      </div>
+      <div class="axis gap">
+        <div class="tag">Descubierto</div>
+        <h4>Diseño de interfaces</h4>
+        <p>
+          La metáfora no lo toca. Está afirmado en prosa —el <em>about</em>, Figma en
+          Avanzado, "pixel-perfect" en la experiencia— pero <b>no demostrado en ningún lado</b>.
+        </p>
+      </div>
+    </div>
+
+    <p style="margin-top:24px">
+      Para una afirmación de ingeniería, el resultado alcanza: el código habla. Para una
+      afirmación de diseño no, y ahí hay una contradicción incómoda: <b>el sitio ES el
+      portafolio</b>. Si alguien tiene que <em>leer</em> que sabés diseñar interfaces, es
+      porque la interfaz no se lo está diciendo sola.
+    </p>
+
+    <h3>Restricciones que la marca nueva tiene que respetar</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Restricción</th><th>Por qué</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>El acento carga 45 usos</b></td>
+            <td>Un acento suave y elegante queda precioso en un brand board y plano acá: el diseño se sostiene con grises finos y confía en que el acento grite.</td>
+          </tr>
+          <tr>
+            <td><b>La mono es el 40% de la superficie</b></td>
+            <td>No es una voz de apoyo. Si se elige display + cuerpo y la mono queda de accesorio, se está especificando una fracción de lo que se ve.</td>
+          </tr>
+          <tr>
+            <td><b>672px de medida están calibrados para Inter a 16px</b></td>
+            <td>Otra tipografía de cuerpo mueve el conteo de 65–75 caracteres por línea. Se revisa al elegir la fuente, no después.</td>
+          </tr>
+          <tr>
+            <td><b>La marca define estados, no solo colores</b></td>
+            <td>Focus, hover, error, vacío, cargando. Ahí es donde un sistema demuestra oficio de interfaz — y hoy esta documentación cubre el reposo y casi nada de los estados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding" style="margin-top:26px">
+      <div class="tag">La jugada</div>
+      <h4>Publicar esta hoja como pieza del portafolio</h4>
+      <p>
+        Este documento demuestra que el sitio tiene tres radios que escalan con el tamaño del
+        objeto, una sola curva de easing gobernando todo, y una regla no escrita de que
+        display aprieta y mono abre. <b>Eso no lo hace alguien que "también sabe de diseño".
+        Lo hace alguien que piensa en sistemas.</b>
+      </p>
+      <p>
+        Un diseñador que hace trabajo de sistemas <b>tiene un sistema para mostrar</b>. Es la
+        prueba más fuerte del tercer eje, ya existe, y no hay que inventar contenido. Y una
+        hoja de rodaje es literalmente el documento técnico con el que se coordina un equipo
+        de filmación: encaja en la metáfora sin forzarla.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Extraído de maoacr.com · main</span>
+    <span>22 componentes · globals.css</span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -21,6 +21,30 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    // Lives at public/hoja-de-rodaje.html: a self-contained document with
+    // its own type and colour, deliberately outside the Next routing and
+    // the site chrome. It is both the committed doc and the live page —
+    // one file, so the version people read is the version in the repo.
+    slug: "hoja-de-rodaje",
+    year: "2026",
+    featured: true,
+    stack: ["Design System", "Design Tokens", "Tailwind v4", "Auditoría de código"],
+    image: "https://picsum.photos/seed/hoja-de-rodaje/1200/900",
+    links: [{ label: "Ver la Hoja de Rodaje", href: "/hoja-de-rodaje.html" }],
+    es: {
+      title: "Hoja de Rodaje — Sistema de diseño de maoacr.com",
+      role: "Auditoría de código y documentación de sistema",
+      summary:
+        "Ingeniería inversa del sistema de diseño de este mismo sitio, extraído del código desplegado en lugar de redactado a mano: tokens semánticos, la escala tipográfica que realmente se usa y los componentes de facto que solo existían como combinaciones de clases repetidas. La auditoría destapó un token declarado y nunca usado, dos campos de formulario con fondos divergentes, y la paleta duplicada a mano en tres archivos que no pueden leer CSS — esto último ahora tiene un chequeo que falla si las dos fuentes se desincronizan.",
+    },
+    en: {
+      title: "Hoja de Rodaje — The maoacr.com Design System",
+      role: "Code audit & system documentation",
+      summary:
+        "Reverse-engineered the design system of this very site, extracted from the deployed code rather than written from scratch: semantic tokens, the type scale actually in use, and the de-facto components that existed only as repeated class combinations. The audit surfaced a token declared and never used, two form fields with diverging backgrounds, and the palette hand-duplicated across three files that cannot read CSS — that last one now has a check that fails when the two sources drift apart.",
+    },
+  },
+  {
     slug: "quarto-roomies",
     year: "2021",
     featured: true,
