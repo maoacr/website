@@ -20,7 +20,6 @@ export const dictionaries = {
       ],
     },
     nav: {
-      role: "Software Engineer",
       switchTheme: "Cambiar tema",
       switchLocale: "Switch to English",
     },
@@ -68,7 +67,17 @@ export const dictionaries = {
     },
     hero: {
       slugline: "INT. ESTUDIO — DÍA 1",
-      kicker: "Software Engineer · Dirección de arte digital",
+      // El oficio fijo, y los que rotan. "Software Engineer" queda en
+      // inglés también en español: es como se nombra el rol en la industria
+      // y como ya se nombraba en el kicker anterior.
+      rolePrefix: "Software Engineer &",
+      roles: [
+        "Diseñador UI",
+        "Diseñador gráfico",
+        "Músico",
+        "Productor de audio",
+        "Editor de video",
+      ],
       name: "Hola,\nsoy Mao",
       lead: "Escribo interfaces con la misma disciplina con la que se edita una escena: cada corte, cada encuadre y cada línea de código tienen que justificar su lugar.",
       cta1: "Ver proyectos",
@@ -283,7 +292,6 @@ export const dictionaries = {
       ],
     },
     nav: {
-      role: "Software Engineer",
       switchTheme: "Toggle theme",
       switchLocale: "Cambiar a Español",
     },
@@ -318,7 +326,14 @@ export const dictionaries = {
     },
     hero: {
       slugline: "INT. STUDIO — DAY 1",
-      kicker: "Software Engineer · Digital Art Direction",
+      rolePrefix: "Software Engineer &",
+      roles: [
+        "UI Designer",
+        "Graphic Designer",
+        "Musician",
+        "Audio Producer",
+        "Video Editor",
+      ],
       name: "Hi,\nI'm Mao",
       lead: "I write interfaces with the same discipline you'd edit a scene: every cut, every frame, every line of code has to earn its place.",
       cta1: "View projects",

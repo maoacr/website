@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { useTypewriter } from "@/lib/hooks/use-typewriter";
 
 const container = {
   hidden: {},
@@ -21,6 +22,20 @@ const line = {
 export function Hero({ dict }: { dict: Dictionary }) {
   const reduceMotion = useReducedMotion();
   const nameLines = dict.hero.name.split("\n");
+
+  // Quicker than the cold open's rhythm on purpose. That screen is the
+  // main event and is paced for thinking; this is an ambient detail beside
+  // a name, and the same slowness here would pull the eye off the name.
+  // It loops, which suits a small accompaniment but would read as restless
+  // on anything that holds attention.
+  const role = useTypewriter({
+    lines: dict.hero.roles,
+    loop: true,
+    typeMs: 55,
+    holdMs: 2200,
+    deleteMs: 26,
+    gapMs: 380,
+  });
 
   return (
     <section
@@ -58,13 +73,31 @@ export function Hero({ dict }: { dict: Dictionary }) {
           ))}
         </motion.h1>
 
+        {/* This line used to sit in the nav, between Blog and the locale
+            switch, where it read as a menu item it never was. It is an
+            identity statement, so it belongs beside the name.
+            The rotating half echoes the cold open's typewriter, kept to
+            this line's own size so it accompanies the name rather than
+            competing with it. */}
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.55, ease: [0.65, 0, 0.35, 1] }}
-          className="mt-6 max-w-xl font-mono text-xs uppercase tracking-[0.2em] text-signal"
+          className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-signal"
         >
-          {dict.hero.kicker}
+          <span>{dict.hero.rolePrefix} </span>
+          {/* Presentation only. The full list sits below for crawlers and
+              assistive tech — these are exactly the terms worth indexing,
+              and one at a time is one indexed. */}
+          <span aria-hidden="true">
+            {role.text}
+            <span
+              className={`ml-0.5 inline-block h-[0.85em] w-[0.5ch] translate-y-[0.1em] bg-signal align-baseline ${
+                role.complete ? "caret-blink" : ""
+              }`}
+            />
+          </span>
+          <span className="sr-only">{dict.hero.roles.join(", ")}</span>
         </motion.p>
 
         <motion.p

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useMemo } from "react";
 import { Play } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { FirstScrollAssist } from "./first-scroll-assist";
+import { useTypewriter } from "@/lib/hooks/use-typewriter";
 
 /**
  * Pacing.
@@ -25,9 +25,6 @@ import { FirstScrollAssist } from "./first-scroll-assist";
  * not the same as being given time to think about it.
  */
 const TYPE_MS = 45;
-/** Composing pauses at punctuation. A comma is a breath, a full stop is a thought. */
-const PAUSE_COMMA_MS = 240;
-const PAUSE_PERIOD_MS = 500;
 const HOLD_MS = 5500;
 /** Fast on purpose: one wipe of the hand, not sixty nervous backspaces. */
 const DELETE_MS = 13;
@@ -58,47 +55,26 @@ const GAP_MS = 1100;
  * visible rendering.
  */
 export function ColdOpen({ dict }: { dict: Dictionary }) {
-  const reduceMotion = useReducedMotion();
   const { frames, bridge, invite, slugline, cue } = dict.coldOpen;
 
-  // The last step is the closing line, which has no axis label and never
-  // erases — the scene resolves there and rests.
-  const lastStep = frames.length;
-  const [step, setStep] = useState(0);
-  const [charCount, setCharCount] = useState(0);
-  const [erasing, setErasing] = useState(false);
+  // The closing line rides at the end of the same sequence: it has no axis
+  // label and, because the run does not loop, it is where the scene rests.
+  const lines = useMemo(
+    () => [...frames.map((frame) => frame.line), bridge],
+    [frames, bridge],
+  );
 
-  const isClosing = step === lastStep;
-  const text = isClosing ? bridge : frames[step].line;
-  const complete = charCount === text.length;
+  const { text, lineIndex, complete, isStatic } = useTypewriter({
+    lines,
+    loop: false,
+    typeMs: TYPE_MS,
+    holdMs: HOLD_MS,
+    deleteMs: DELETE_MS,
+    gapMs: GAP_MS,
+  });
 
-  useEffect(() => {
-    if (reduceMotion) return;
-
-    if (!erasing) {
-      if (charCount < text.length) {
-        const justTyped = text[charCount - 1];
-        const pause =
-          justTyped === "." ? PAUSE_PERIOD_MS : justTyped === "," ? PAUSE_COMMA_MS : 0;
-        const id = setTimeout(() => setCharCount((c) => c + 1), TYPE_MS + pause);
-        return () => clearTimeout(id);
-      }
-      if (isClosing) return; // Resolved. Nothing further to schedule.
-      const id = setTimeout(() => setErasing(true), HOLD_MS);
-      return () => clearTimeout(id);
-    }
-
-    if (charCount > 0) {
-      const id = setTimeout(() => setCharCount((c) => c - 1), DELETE_MS);
-      return () => clearTimeout(id);
-    }
-    // Empty screen: the axis label swaps here, with no text to contradict it.
-    const id = setTimeout(() => {
-      setStep((s) => s + 1);
-      setErasing(false);
-    }, GAP_MS);
-    return () => clearTimeout(id);
-  }, [charCount, erasing, text, isClosing, reduceMotion]);
+  const isClosing = lineIndex === frames.length;
+  const reduceMotion = isStatic;
 
   return (
     <section
@@ -158,14 +134,14 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                 mid-type — that layout shift gets measured against the site. */}
             <div aria-hidden="true" className="mt-14">
               <p className="h-4 font-mono text-[10px] uppercase tracking-wider text-muted">
-                {isClosing ? "" : frames[step].axis}
+                {isClosing ? "" : frames[lineIndex].axis}
               </p>
               <p
                 className={`mt-4 min-h-[15rem] max-w-5xl font-display text-4xl font-semibold leading-[1.15] tracking-tight sm:text-5xl lg:text-6xl ${
                   isClosing ? "text-signal" : "text-fg"
                 }`}
               >
-                {text.slice(0, charCount)}
+                {text}
                 <span
                   className={`ml-1 inline-block h-[0.8em] w-[0.45ch] translate-y-[0.06em] bg-signal align-baseline ${
                     complete ? "caret-blink" : ""

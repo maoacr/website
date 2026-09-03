@@ -60,9 +60,6 @@ export function SiteNav({
           >
             {dict.blog.navLabel}
           </Link>
-          <span className="hidden font-mono text-xs uppercase tracking-wider text-muted sm:inline">
-            {dict.nav.role}
-          </span>
           <LocaleSwitch
             locale={locale}
             label={dict.nav.switchLocale}

@@ -90,8 +90,13 @@ export default async function OpengraphImage({
           >
             Mario Crespo
           </div>
-          <div style={{ fontSize: 38, color: MUTED, marginTop: 20 }}>
-            {dict.hero.kicker}
+          {/* On the site this line rotates one role at a time. A social
+              card is a single frame and cannot, which makes it the one
+              place the whole range belongs at once — so it lists every
+              role rather than picking one. Smaller than the old single
+              kicker because it now carries five. */}
+          <div style={{ fontSize: 30, color: MUTED, marginTop: 20, lineHeight: 1.3 }}>
+            {dict.hero.rolePrefix} {dict.hero.roles.join(" · ")}
           </div>
         </div>
 
