@@ -24,10 +24,45 @@ export const dictionaries = {
       switchTheme: "Cambiar tema",
       switchLocale: "Switch to English",
     },
+    // COPIA PROVISIONAL — pensada para reemplazarse.
+    // Cada línea sale de un proyecto real de lib/data/projects.ts o de las
+    // estadísticas de `about`. Ese es el criterio, no el texto: un dato de
+    // industria ("el 90% de los usuarios abandona en 3 segundos") lo puede
+    // decir cualquiera, así que no prueba nada. Estos no los puede decir
+    // otra persona. Al reescribirlos, mantené esa regla.
+    // Las etiquetas de eje hacen la afirmación que el texto no dice: cubren
+    // arquitectura, diseño, ingeniería, producto y audiovisual sin que haya
+    // una sola frase declarando "soy experto en".
+    coldOpen: {
+      slugline: "COLD OPEN — ANTES DE LOS TÍTULOS",
+      frames: [
+        {
+          axis: "Arquitectura",
+          line: "Cinco roles, doce tablas, y el ruteo decidido por metadata en el JWT.",
+        },
+        {
+          axis: "Diseño",
+          line: "Un video en autoplay estaba hundiendo el Core Web Vitals de un sitio entero.",
+        },
+        {
+          axis: "Ingeniería",
+          line: "Seis módulos con arquitectura SOLID, arriesgando 1% por operación.",
+        },
+        {
+          axis: "Producto",
+          line: "Once SKUs y una tabla de compatibilidad por vehículo. Adentro de WhatsApp.",
+        },
+        {
+          axis: "Audiovisual",
+          line: "Diez años editando. Ciento cincuenta cursos. Una Orquídea Andina.",
+        },
+      ],
+      bridge: "Todo eso lo hizo la misma persona.",
+    },
     hero: {
       slugline: "INT. ESTUDIO — DÍA 1",
       kicker: "Software Engineer · Dirección de arte digital",
-      name: "Mario Alejandro\nCrespo Reyes",
+      name: "Hola,\nsoy Mao",
       lead: "Escribo interfaces con la misma disciplina con la que se edita una escena: cada corte, cada encuadre y cada línea de código tienen que justificar su lugar.",
       cta1: "Ver proyectos",
       cta2: "Hablemos",
@@ -238,10 +273,37 @@ export const dictionaries = {
       switchTheme: "Toggle theme",
       switchLocale: "Cambiar a Español",
     },
+    // PLACEHOLDER COPY — see the note on the Spanish `coldOpen`.
+    coldOpen: {
+      slugline: "COLD OPEN — BEFORE THE TITLES",
+      frames: [
+        {
+          axis: "Architecture",
+          line: "Five roles, twelve tables, and routing decided by JWT metadata.",
+        },
+        {
+          axis: "Design",
+          line: "An autoplay video was sinking an entire site's Core Web Vitals.",
+        },
+        {
+          axis: "Engineering",
+          line: "Six modules on SOLID architecture, risking 1% per trade.",
+        },
+        {
+          axis: "Product",
+          line: "Eleven SKUs and a per-vehicle compatibility table. Inside WhatsApp.",
+        },
+        {
+          axis: "Audiovisual",
+          line: "Ten years editing. A hundred and fifty courses. One Orquídea Andina.",
+        },
+      ],
+      bridge: "Same person did all of it.",
+    },
     hero: {
       slugline: "INT. STUDIO — DAY 1",
       kicker: "Software Engineer · Digital Art Direction",
-      name: "Mario Alejandro\nCrespo Reyes",
+      name: "Hi,\nI'm Mao",
       lead: "I write interfaces with the same discipline you'd edit a scene: every cut, every frame, every line of code has to earn its place.",
       cta1: "View projects",
       cta2: "Let's talk",

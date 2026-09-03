@@ -8,6 +8,13 @@ export const SITE_URL = "https://maoacr.com";
 export const SITE_NAME = "Mario Crespo";
 export const AUTHOR_NAME = "Mario Alejandro Crespo Reyes";
 export const AUTHOR_SHORT_NAME = "Mao Crespo";
+/**
+ * The handle, identical in every locale — so it lives here rather than in
+ * the dictionaries, which hold per-language *content*. Same string as the
+ * domain and every social profile; keeping one copy is what stops the nav,
+ * the footer and the metadata drifting into three spellings.
+ */
+export const AUTHOR_HANDLE = "@maoacr";
 export const AUTHOR_EMAIL = "iam@maoacr.com";
 export const AUTHOR_LINKEDIN = "https://linkedin.com/in/maoacr";
 

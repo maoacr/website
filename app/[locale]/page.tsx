@@ -2,6 +2,7 @@ import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
+import { ColdOpen } from "@/components/cold-open";
 import { Hero } from "@/components/hero";
 import { About } from "@/components/about";
 import { Experience } from "@/components/experience";
@@ -26,6 +27,7 @@ export default async function HomePage({
       <SiteNav locale={locale} dict={dict} />
       <ScrollScenes />
       <main>
+        <ColdOpen dict={dict} />
         <Hero dict={dict} />
         <About dict={dict} />
         <Experience dict={dict} />
