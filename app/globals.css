@@ -14,6 +14,12 @@
   --border: var(--line);
   --surface: #ffffff;
   --muted: #6b6a64;
+
+  /* The site's one easing curve — the "cut". Used by the theme/locale view
+     transitions and the nav reveal. Framer Motion needs it as a JS array
+     and can't read this, so the same four numbers appear there too; this
+     at least stops the CSS side repeating itself. */
+  --ease-cut: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .dark {
@@ -128,11 +134,31 @@ body > main {
   animation: caret-blink 1.06s step-end infinite;
 }
 
+/* Floating nav treatment.
+   Blur alone gives a translucent panel, not glass. The saturation boost is
+   what keeps colour passing under the bar alive instead of washing to
+   grey, and it is the difference between "frosted" and the liquid-glass
+   read.
+   The shadow is the only one in the system, on purpose: "floating" has to
+   be legible as depth, and a border by itself reads as a box pasted onto
+   the page. It is heavier in dark mode because a dark shadow on a dark
+   ground needs the extra opacity to register at all. */
+.nav-glass {
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.07);
+}
+.dark .nav-glass {
+  background: color-mix(in srgb, var(--bg) 66%, transparent);
+  box-shadow: 0 10px 36px rgb(0 0 0 / 0.4);
+}
+
 /* Native View Transitions: theme + locale swap read as a soft cut */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-timing-function: var(--ease-cut);
 }
 
 @media (prefers-reduced-motion: reduce) {

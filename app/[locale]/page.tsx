@@ -24,7 +24,9 @@ export default async function HomePage({
 
   return (
     <>
-      <SiteNav locale={locale} dict={dict} />
+      {/* Only here: the cold open owns the first screen, so the nav waits
+          for the first scroll. Every other page shows it immediately. */}
+      <SiteNav locale={locale} dict={dict} revealOnScroll />
       <ScrollScenes />
       <main>
         <ColdOpen dict={dict} />

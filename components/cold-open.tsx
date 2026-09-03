@@ -57,7 +57,7 @@ const GAP_MS = 1100;
  */
 export function ColdOpen({ dict }: { dict: Dictionary }) {
   const reduceMotion = useReducedMotion();
-  const { frames, bridge, slugline, cue } = dict.coldOpen;
+  const { frames, bridge, invite, slugline, cue } = dict.coldOpen;
 
   // The last step is the closing line, which has no axis label and never
   // erases — the scene resolves there and rests.
@@ -126,6 +126,9 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
             <p className="mt-8 font-mono text-sm uppercase tracking-wider text-signal">
               {bridge}
             </p>
+            <p className="mt-3 font-mono text-sm uppercase tracking-wider text-muted">
+              {invite}
+            </p>
           </>
         ) : (
           <>
@@ -147,6 +150,19 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                     complete ? "caret-blink" : ""
                   }`}
                 />
+              </p>
+
+              {/* The invitation. It arrives only once the closing line has
+                  finished, so it reads as the scene handing over rather
+                  than a button competing with the sentences. */}
+              <p
+                className="mt-8 font-mono text-sm uppercase tracking-wider text-muted"
+                style={{
+                  opacity: isClosing && complete ? 1 : 0,
+                  transition: "opacity 900ms var(--ease-cut)",
+                }}
+              >
+                {invite}
               </p>
             </div>
 

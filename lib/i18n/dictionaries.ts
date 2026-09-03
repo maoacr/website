@@ -63,6 +63,7 @@ export const dictionaries = {
         },
       ],
       bridge: "Nadie ve esto desde un solo oficio.",
+      invite: "Dale play.",
       cue: "Desplázate — entran los títulos",
     },
     hero: {
@@ -305,6 +306,7 @@ export const dictionaries = {
         },
       ],
       bridge: "No single discipline sees all of this.",
+      invite: "Press play.",
       cue: "Scroll — titles roll",
     },
     hero: {
