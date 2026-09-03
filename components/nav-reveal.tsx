@@ -50,11 +50,20 @@ export function NavReveal({ children }: { children: ReactNode }) {
     <div
       inert={!shown}
       aria-hidden={!shown}
-      // Opacity only, never transform: a transformed ancestor would become
-      // the containing block for the fixed header inside and drop it out of
-      // the viewport. Opacity creates a stacking context, which is harmless.
+      // Two constraints fight here.
+      //
+      // Never transform: a transformed ancestor becomes the containing
+      // block for the fixed header inside and drops it out of the viewport.
+      //
+      // And once shown, emit no `opacity` at all rather than `opacity: 1`.
+      // An ancestor with opacity below 1 establishes a backdrop root, and a
+      // descendant's `backdrop-filter` then samples that empty root instead
+      // of the page — the nav's glass would quietly stop blurring anything.
+      // Dropping the property leaves the element at its default 1 with no
+      // stacking context, so the blur keeps seeing the real backdrop. The
+      // transition still animates, from 0 to that default.
       style={{
-        opacity: shown ? 1 : 0,
+        opacity: shown ? undefined : 0,
         transition: "opacity 1100ms var(--ease-cut)",
       }}
     >

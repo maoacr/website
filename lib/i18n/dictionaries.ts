@@ -251,9 +251,16 @@ export const dictionaries = {
         metaDescription: "Entrada privada, protegida con contraseña.",
       },
     },
+    // El footer cierra la película. `credits` es un array por la misma razón
+    // que `about.stats` y `coldOpen.frames`: sumar una línea (música, foto,
+    // agradecimientos) es editar datos, nunca el componente.
     footer: {
+      end: "Fin.",
+      credits: [
+        { label: "Dirección y desarrollo", value: "Mario Crespo" },
+        { label: "Rodado en", value: "Fusagasugá, Colombia" },
+      ],
       rights: "Todos los derechos reservados.",
-      builtWith: "Diseñado y desarrollado por Mario Crespo.",
       backToTop: "Volver arriba",
     },
   },
@@ -495,8 +502,12 @@ export const dictionaries = {
       },
     },
     footer: {
+      end: "The End.",
+      credits: [
+        { label: "Directed and built by", value: "Mario Crespo" },
+        { label: "Shot in", value: "Fusagasugá, Colombia" },
+      ],
       rights: "All rights reserved.",
-      builtWith: "Designed and built by Mario Crespo.",
       backToTop: "Back to top",
     },
   },

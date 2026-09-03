@@ -143,10 +143,15 @@ body > main {
    be legible as depth, and a border by itself reads as a box pasted onto
    the page. It is heavier in dark mode because a dark shadow on a dark
    ground needs the extra opacity to register at all. */
+/* --nav-blur is the dial. Raise it if text still reads through the bar;
+   lower it if the glass starts looking like frosted plastic. Prefer moving
+   this over raising the background opacity — opacity past ~80% stops being
+   glass and becomes a solid bar with a shadow. */
 .nav-glass {
-  background: color-mix(in srgb, var(--bg) 72%, transparent);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  --nav-blur: 48px;
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
+  backdrop-filter: blur(var(--nav-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(180%);
   /* Drop shadow for the float, plus a hairline highlight along the top
      edge. That inset line is what real glass does when light catches its
      lip, and it is most of the difference between "translucent rectangle"
