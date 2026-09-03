@@ -13,15 +13,20 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
  * Uniform motion — even slow uniform motion — reads as a machine
  * printing. Stillness is what makes it feel like thinking.
  *
- * These facts are dense (five roles, twelve tables, JWT metadata). HOLD
- * has to cover reading them *and* considering them, which is roughly
- * twice what reading alone needs.
+ * These lines are cross-domain observations, not headlines — sRGB
+ * midtones, 10ms of audio latency. HOLD has to cover reading one *and*
+ * turning it over, which is roughly twice what reading alone needs.
+ *
+ * TYPE and HOLD are balanced so stillness at least matches motion. An
+ * earlier pass had typing take longer than the pause that followed it,
+ * which inverts the intent: waiting for a sentence to finish appearing is
+ * not the same as being given time to think about it.
  */
-const TYPE_MS = 55;
+const TYPE_MS = 45;
 /** Composing pauses at punctuation. A comma is a breath, a full stop is a thought. */
 const PAUSE_COMMA_MS = 240;
 const PAUSE_PERIOD_MS = 500;
-const HOLD_MS = 4800;
+const HOLD_MS = 5500;
 /** Fast on purpose: one wipe of the hand, not sixty nervous backspaces. */
 const DELETE_MS = 13;
 /** Silence. An empty screen between thoughts is the calmest frame here. */
@@ -44,11 +49,11 @@ const GAP_MS = 1100;
  * The typewriter is the one effect this site can justify — the subject
  * *is* screenwriting and editing, set in monospace, so mechanism and
  * meaning are the same thing. Its two usual costs are paid, not accepted:
- * one line in the DOM at a time would hide four of five expertise claims
- * from crawlers, and text replacing itself is hostile to screen readers.
- * So the animation is presentation only (`aria-hidden`) and all five facts
- * live in the DOM as a real list. With reduced motion that list simply
- * becomes the visible rendering.
+ * one line in the DOM at a time would hide four of five observations from
+ * crawlers, and text replacing itself is hostile to screen readers. So the
+ * animation is presentation only (`aria-hidden`) and every line lives in
+ * the DOM as a real list. With reduced motion that list simply becomes the
+ * visible rendering.
  */
 export function ColdOpen({ dict }: { dict: Dictionary }) {
   const reduceMotion = useReducedMotion();

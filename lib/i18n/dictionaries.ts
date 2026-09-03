@@ -25,39 +25,44 @@ export const dictionaries = {
       switchLocale: "Switch to English",
     },
     // COPIA PROVISIONAL — pensada para reemplazarse.
-    // Cada línea sale de un proyecto real de lib/data/projects.ts o de las
-    // estadísticas de `about`. Ese es el criterio, no el texto: un dato de
-    // industria ("el 90% de los usuarios abandona en 3 segundos") lo puede
-    // decir cualquiera, así que no prueba nada. Estos no los puede decir
-    // otra persona. Al reescribirlos, mantené esa regla.
-    // Las etiquetas de eje hacen la afirmación que el texto no dice: cubren
-    // arquitectura, diseño, ingeniería, producto y audiovisual sin que haya
-    // una sola frase declarando "soy experto en".
+    //
+    // La regla, que importa más que el texto: cada línea nombra UN MECANISMO
+    // REAL en dos dominios a la vez, y es verificable. Software y música,
+    // color y percepción, montaje e interfaz.
+    //
+    // Lo que hay que evitar a toda costa es el aforismo — "el código es
+    // poesía", "diseñar es escuchar". Ese registro suena a experto sin
+    // serlo, y es el equivalente en frase del dato de industria que
+    // cualquiera googlea. El test: si se puede escribir sin haber hecho
+    // las dos cosas, no sirve.
+    //
+    // Las etiquetas nombran la INTERSECCIÓN, no la disciplina: el cruce es
+    // la afirmación, no una lista de oficios.
     coldOpen: {
       slugline: "COLD OPEN — ANTES DE LOS TÍTULOS",
       frames: [
         {
-          axis: "Arquitectura",
-          line: "Cinco roles, doce tablas, y el ruteo decidido por metadata en el JWT.",
+          axis: "Música · Movimiento",
+          line: "El groove muere si cuantizás la batería a la grilla. La interfaz muere si animás en linear.",
         },
         {
-          axis: "Diseño",
-          line: "Un video en autoplay estaba hundiendo el Core Web Vitals de un sitio entero.",
+          axis: "Audio · Latencia",
+          line: "Un músico siente 10 milisegundos de retardo. Un usuario siente 100. Es el mismo hardware humano.",
         },
         {
-          axis: "Ingeniería",
-          line: "Seis módulos con arquitectura SOLID, arriesgando 1% por operación.",
+          axis: "Color · Percepción",
+          line: "Mezclar color en sRGB ensucia el medio tono: el ojo no es lineal, y casi todo el software finge que sí.",
         },
         {
-          axis: "Producto",
-          line: "Once SKUs y una tabla de compatibilidad por vehículo. Adentro de WhatsApp.",
+          axis: "Montaje · Interfaz",
+          line: "Un corte funciona cuando el ojo ya venía en movimiento. Una transición de interfaz, igual.",
         },
         {
-          axis: "Audiovisual",
-          line: "Diez años editando. Ciento cincuenta cursos. Una Orquídea Andina.",
+          axis: "Tipografía · Fisiología",
+          line: "La medida de 65 caracteres no es estética: es hasta dónde el ojo vuelve al margen sin perderse.",
         },
       ],
-      bridge: "Todo eso lo hizo la misma persona.",
+      bridge: "Nadie ve esto desde un solo oficio.",
       cue: "Desplázate — entran los títulos",
     },
     hero: {
@@ -274,32 +279,32 @@ export const dictionaries = {
       switchTheme: "Toggle theme",
       switchLocale: "Cambiar a Español",
     },
-    // PLACEHOLDER COPY — see the note on the Spanish `coldOpen`.
+    // PLACEHOLDER COPY — see the note on the Spanish `coldOpen` for the rule.
     coldOpen: {
       slugline: "COLD OPEN — BEFORE THE TITLES",
       frames: [
         {
-          axis: "Architecture",
-          line: "Five roles, twelve tables, and routing decided by JWT metadata.",
+          axis: "Music · Motion",
+          line: "Quantize drums to a perfect grid and the groove dies. Animate an interface linear and it dies the same way.",
         },
         {
-          axis: "Design",
-          line: "An autoplay video was sinking an entire site's Core Web Vitals.",
+          axis: "Audio · Latency",
+          line: "A musician feels 10 milliseconds of delay. A user feels 100. Same human hardware.",
         },
         {
-          axis: "Engineering",
-          line: "Six modules on SOLID architecture, risking 1% per trade.",
+          axis: "Colour · Perception",
+          line: "Blending colour in sRGB muddies the midtone: the eye isn't linear, and most software pretends it is.",
         },
         {
-          axis: "Product",
-          line: "Eleven SKUs and a per-vehicle compatibility table. Inside WhatsApp.",
+          axis: "Editing · Interface",
+          line: "A cut works when the eye was already moving. So does an interface transition.",
         },
         {
-          axis: "Audiovisual",
-          line: "Ten years editing. A hundred and fifty courses. One Orquídea Andina.",
+          axis: "Type · Physiology",
+          line: "The 65-character measure isn't taste: it's how far the eye returns to the margin without losing its place.",
         },
       ],
-      bridge: "Same person did all of it.",
+      bridge: "No single discipline sees all of this.",
       cue: "Scroll — titles roll",
     },
     hero: {
