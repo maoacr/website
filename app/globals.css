@@ -160,8 +160,12 @@ body > main {
     0 8px 32px rgb(0 0 0 / 0.07),
     inset 0 1px 0 rgb(255 255 255 / 0.5);
 }
+/* Dark runs far more opaque than light (95% vs 74%) by choice, not
+   oversight: light text on a dark ground punches through frosting much
+   harder than dark text on a light one, so the two themes need different
+   amounts of cover to read as equally clean. */
 .dark .nav-glass {
-  background: color-mix(in srgb, var(--bg) 74%, transparent);
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
   box-shadow:
     0 10px 36px rgb(0 0 0 / 0.4),
     inset 0 1px 0 rgb(255 255 255 / 0.06);

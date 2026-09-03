@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+import { Play } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { FirstScrollAssist } from "./first-scroll-assist";
 
@@ -133,9 +134,22 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
             <p className="mt-8 font-mono text-sm uppercase tracking-wider text-signal">
               {bridge}
             </p>
-            <p className="mt-3 font-mono text-sm uppercase tracking-wider text-muted">
-              {invite}
-            </p>
+            {/* A real control here too — the same lying-affordance problem
+                applies whether or not the page is animating. */}
+            <a
+              href="#intro"
+              className="group mt-8 inline-flex items-center gap-4 text-fg transition-colors hover:text-signal"
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-full border border-border transition-colors group-hover:border-signal">
+                <Play
+                  className="ml-0.5 h-5 w-5"
+                  fill="currentColor"
+                  strokeWidth={1}
+                  aria-hidden="true"
+                />
+              </span>
+              <span className="font-mono text-xs uppercase tracking-wider">{invite}</span>
+            </a>
           </>
         ) : (
           <>
@@ -147,7 +161,7 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                 {isClosing ? "" : frames[step].axis}
               </p>
               <p
-                className={`mt-4 min-h-[11rem] max-w-5xl font-display text-3xl font-semibold leading-[1.15] tracking-tight sm:min-h-[15rem] sm:text-5xl lg:text-6xl ${
+                className={`mt-4 min-h-[15rem] max-w-5xl font-display text-4xl font-semibold leading-[1.15] tracking-tight sm:text-5xl lg:text-6xl ${
                   isClosing ? "text-signal" : "text-fg"
                 }`}
               >
@@ -158,7 +172,6 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                   }`}
                 />
               </p>
-
             </div>
 
             {/* The invitation is a real control, not a caption. Styled as
@@ -174,12 +187,28 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                 transition: "opacity 900ms var(--ease-cut)",
               }}
             >
+              {/* Reads as a transport control, not a generic button. The
+                  triangle points right because that is what play means
+                  everywhere — a down arrow says "scroll", which is a
+                  different instruction wearing the same label. The circle
+                  is what carries the recognition; the word only confirms
+                  it. `fill` as well as stroke, because a hollow triangle
+                  reads as a chevron. */}
               <a
                 href="#intro"
-                className="mt-10 inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-fg transition-colors hover:border-signal hover:text-signal"
+                className="group mt-10 inline-flex items-center gap-4 text-fg transition-colors hover:text-signal"
               >
-                {invite}
-                <span aria-hidden="true">↓</span>
+                <span className="flex h-14 w-14 items-center justify-center rounded-full border border-border transition-colors group-hover:border-signal">
+                  <Play
+                    className="ml-0.5 h-5 w-5"
+                    fill="currentColor"
+                    strokeWidth={1}
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="font-mono text-xs uppercase tracking-wider">
+                  {invite}
+                </span>
               </a>
             </div>
 
