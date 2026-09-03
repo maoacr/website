@@ -4,11 +4,28 @@ import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
-const TYPE_MS = 38;
-const DELETE_MS = 18;
-/** Long enough to finish reading a two-line fact before it starts erasing. */
-const HOLD_MS = 2400;
-const GAP_MS = 450;
+/**
+ * Pacing.
+ *
+ * The point of this screen is a quiet room where someone is writing, and
+ * that is built from contrast rather than speed: compose slowly, sit
+ * still, erase in one decisive gesture, then say nothing for a beat.
+ * Uniform motion — even slow uniform motion — reads as a machine
+ * printing. Stillness is what makes it feel like thinking.
+ *
+ * These facts are dense (five roles, twelve tables, JWT metadata). HOLD
+ * has to cover reading them *and* considering them, which is roughly
+ * twice what reading alone needs.
+ */
+const TYPE_MS = 55;
+/** Composing pauses at punctuation. A comma is a breath, a full stop is a thought. */
+const PAUSE_COMMA_MS = 240;
+const PAUSE_PERIOD_MS = 500;
+const HOLD_MS = 4800;
+/** Fast on purpose: one wipe of the hand, not sixty nervous backspaces. */
+const DELETE_MS = 13;
+/** Silence. An empty screen between thoughts is the calmest frame here. */
+const GAP_MS = 1100;
 
 /**
  * The scene before the title card.
@@ -19,41 +36,48 @@ const GAP_MS = 450;
  * the grammar the site was already built on: the scroll cue reads
  * "press play".
  *
- * The typewriter is the one effect this site can justify. It is a worn
- * device almost everywhere else, but here the subject *is* screenwriting
- * and editing, set in monospace: the mechanism and the meaning are the
- * same thing.
+ * The sequence ENDS rather than looping. A scene that repeats forever is
+ * restless, and restless is the opposite of the intent; it also means the
+ * visitor who waits is paid off with the closing line instead of watching
+ * a treadmill.
  *
- * Two costs it would otherwise carry, both paid below:
- *
- *   - Only one line existing at a time would leave four of five expertise
- *     claims invisible to crawlers.
- *   - Text replacing itself every few seconds is hostile to screen
- *     readers.
- *
- * So the animation is presentation only — `aria-hidden`, driven by state —
- * while all five facts sit in the DOM as a real list, exposed to crawlers
- * and assistive tech. Same content, two deliveries. With reduced motion
- * that list simply becomes the visible one.
+ * The typewriter is the one effect this site can justify — the subject
+ * *is* screenwriting and editing, set in monospace, so mechanism and
+ * meaning are the same thing. Its two usual costs are paid, not accepted:
+ * one line in the DOM at a time would hide four of five expertise claims
+ * from crawlers, and text replacing itself is hostile to screen readers.
+ * So the animation is presentation only (`aria-hidden`) and all five facts
+ * live in the DOM as a real list. With reduced motion that list simply
+ * becomes the visible rendering.
  */
 export function ColdOpen({ dict }: { dict: Dictionary }) {
   const reduceMotion = useReducedMotion();
-  const frames = dict.coldOpen.frames;
+  const { frames, bridge, slugline, cue } = dict.coldOpen;
 
-  const [frameIndex, setFrameIndex] = useState(0);
+  // The last step is the closing line, which has no axis label and never
+  // erases — the scene resolves there and rests.
+  const lastStep = frames.length;
+  const [step, setStep] = useState(0);
   const [charCount, setCharCount] = useState(0);
-  const [phase, setPhase] = useState<"typing" | "deleting">("typing");
+  const [erasing, setErasing] = useState(false);
+
+  const isClosing = step === lastStep;
+  const text = isClosing ? bridge : frames[step].line;
+  const complete = charCount === text.length;
 
   useEffect(() => {
     if (reduceMotion) return;
-    const { line } = frames[frameIndex];
 
-    if (phase === "typing") {
-      if (charCount < line.length) {
-        const id = setTimeout(() => setCharCount((c) => c + 1), TYPE_MS);
+    if (!erasing) {
+      if (charCount < text.length) {
+        const justTyped = text[charCount - 1];
+        const pause =
+          justTyped === "." ? PAUSE_PERIOD_MS : justTyped === "," ? PAUSE_COMMA_MS : 0;
+        const id = setTimeout(() => setCharCount((c) => c + 1), TYPE_MS + pause);
         return () => clearTimeout(id);
       }
-      const id = setTimeout(() => setPhase("deleting"), HOLD_MS);
+      if (isClosing) return; // Resolved. Nothing further to schedule.
+      const id = setTimeout(() => setErasing(true), HOLD_MS);
       return () => clearTimeout(id);
     }
 
@@ -61,66 +85,67 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
       const id = setTimeout(() => setCharCount((c) => c - 1), DELETE_MS);
       return () => clearTimeout(id);
     }
-    // Empty: the axis label swaps here, while there is no text to contradict.
+    // Empty screen: the axis label swaps here, with no text to contradict it.
     const id = setTimeout(() => {
-      setFrameIndex((i) => (i + 1) % frames.length);
-      setPhase("typing");
+      setStep((s) => s + 1);
+      setErasing(false);
     }, GAP_MS);
     return () => clearTimeout(id);
-  }, [charCount, phase, frameIndex, frames, reduceMotion]);
-
-  const current = frames[frameIndex];
+  }, [charCount, erasing, text, isClosing, reduceMotion]);
 
   return (
-    /* Full viewport on purpose. A cold open that shares the screen with
-       what follows isn't a scene, it's a block — the reader has to arrive
-       at the bottom of it and *choose* to scroll for the first scroll to
-       feel like starting the projection. `svh` rather than `vh` so mobile
-       browser chrome doesn't crop it. `pt-16` clears the fixed nav. */
     <section
-      data-scene={dict.coldOpen.slugline}
-      aria-label={dict.coldOpen.slugline}
+      data-scene={slugline}
+      aria-label={slugline}
       className="relative flex min-h-[100svh] flex-col justify-center px-4 pt-16 sm:px-8"
     >
       <div className="mx-auto w-full max-w-6xl">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-signal">
-          {dict.coldOpen.slugline}
+          {slugline}
         </p>
 
         {reduceMotion ? (
-          /* No animation: the same five facts, shown at once. */
-          <ul className="mt-12 flex flex-col">
-            {frames.map((frame) => (
-              <li key={frame.axis} className="border-t border-border py-7 sm:py-9">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
-                  {frame.axis}
-                </p>
-                <p className="mt-3 max-w-4xl font-display text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
-                  {frame.line}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="mt-12 flex flex-col">
+              {frames.map((frame) => (
+                <li key={frame.axis} className="border-t border-border py-6">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                    {frame.axis}
+                  </p>
+                  <p className="mt-2 max-w-5xl font-display text-xl font-semibold leading-snug tracking-tight sm:text-2xl">
+                    {frame.line}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 font-mono text-sm uppercase tracking-wider text-signal">
+              {bridge}
+            </p>
+          </>
         ) : (
           <>
-            {/* Presentation layer. The height is reserved so a short line
-                followed by a long one doesn't shove the page down mid-type —
-                the layout shift would be measured against the site. */}
-            <div aria-hidden="true" className="mt-12">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
-                {current.axis}
+            {/* Presentation layer. Height is reserved for the longest line
+                so a short fact followed by a long one cannot shove the page
+                mid-type — that layout shift gets measured against the site. */}
+            <div aria-hidden="true" className="mt-14">
+              <p className="h-4 font-mono text-[10px] uppercase tracking-wider text-muted">
+                {isClosing ? "" : frames[step].axis}
               </p>
-              <p className="mt-3 min-h-[7.5rem] max-w-4xl font-display text-2xl font-semibold leading-snug tracking-tight sm:min-h-[9rem] sm:text-4xl">
-                {current.line.slice(0, charCount)}
+              <p
+                className={`mt-4 min-h-[11rem] max-w-5xl font-display text-3xl font-semibold leading-[1.15] tracking-tight sm:min-h-[15rem] sm:text-5xl lg:text-6xl ${
+                  isClosing ? "text-signal" : "text-fg"
+                }`}
+              >
+                {text.slice(0, charCount)}
                 <span
-                  className={`ml-0.5 inline-block h-[0.85em] w-[0.5ch] translate-y-[0.08em] bg-signal align-baseline ${
-                    charCount === current.line.length ? "caret-blink" : ""
+                  className={`ml-1 inline-block h-[0.8em] w-[0.45ch] translate-y-[0.06em] bg-signal align-baseline ${
+                    complete ? "caret-blink" : ""
                   }`}
                 />
               </p>
             </div>
 
-            {/* The real content: read by crawlers and screen readers, never
+            {/* The real content: read by crawlers and assistive tech, never
                 shown, because the sighted reader gets it above in sequence. */}
             <ul className="sr-only">
               {frames.map((frame) => (
@@ -128,21 +153,17 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                   {frame.axis}: {frame.line}
                 </li>
               ))}
+              <li>{bridge}</li>
             </ul>
           </>
         )}
-
-        <p className="mt-10 border-t border-signal pt-7 font-mono text-sm uppercase tracking-wider text-signal">
-          {dict.coldOpen.bridge}
-        </p>
       </div>
 
-      {/* The affordance that makes the full-height choice work: without it
-          a screen that ends cleanly reads as the whole page. Mirrors the
-          hero's cue, one beat earlier in the sequence. */}
+      {/* The affordance that makes the full-height choice work: a screen
+          that ends cleanly otherwise reads as the whole page. */}
       <div className="absolute bottom-8 left-4 hidden font-mono text-[11px] uppercase tracking-widest text-muted sm:left-8 sm:flex sm:items-center sm:gap-2">
         <span className="h-px w-8 bg-border" />
-        {dict.coldOpen.cue}
+        {cue}
       </div>
     </section>
   );
