@@ -75,9 +75,20 @@ body {
    DOM, and the nav and timecode HUD are `fixed`, so neither becomes a flex item.
 
    `flex: 1 0 auto` rather than `flex: 1`: the latter sets flex-basis to 0,
-   which would let a tall <main> be shrunk below its content height. */
+   which would let a tall <main> be shrunk below its content height.
+
+   `width: 100%` is load-bearing, not redundant. Every <main> here is
+   `mx-auto max-w-*`, and per the flexbox spec an item with auto margins on
+   the cross axis is NOT stretched by `align-items: stretch` — it is sized
+   to its content and the auto margins absorb the rest. So once the body
+   became a flex column, each <main> shrink-wrapped to whatever it happened
+   to contain: the blog index measured 725px with two cards and the full
+   896px with three, and the width visibly changed when switching language.
+   Restoring an explicit 100% makes max-width the thing that decides the
+   measure again, exactly as it did while the body was `display: block`. */
 body > main {
   flex: 1 0 auto;
+  width: 100%;
 }
 
 ::selection {
