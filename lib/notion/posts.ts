@@ -37,6 +37,33 @@ function publishedFilter(
   };
 }
 
+/**
+ * The page id this post is a translation of, from whichever relation
+ * column actually holds it.
+ *
+ * Notion's two-way relations come in a matched pair, and because this
+ * relation points the database at itself, *both* sides land in this same
+ * database as two separate columns — one you fill in by hand, one Notion
+ * mirrors for you. Which of the two carries the value depends on which
+ * side of the pair a given row sits on: the Spanish post here holds it in
+ * one column and its English counterpart in the other. Reading a single
+ * hardcoded column would resolve the link in one direction and silently
+ * fail in the other.
+ *
+ * So relation columns are found by *type* rather than by name, and the
+ * first one holding a value wins. That also means renaming them in Notion
+ * — they're currently called "Lang" and "Relation", neither of which says
+ * "translation" — won't break anything here.
+ */
+function readTranslationId(props: PageObjectResponse["properties"]): string | null {
+  for (const prop of Object.values(props)) {
+    if (prop.type !== "relation") continue;
+    const id = prop.relation[0]?.id;
+    if (id) return id;
+  }
+  return null;
+}
+
 function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
   const props = page.properties;
 
@@ -99,6 +126,7 @@ function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
     lang: locale,
     excerpt,
     isProtected,
+    translationId: readTranslationId(props),
   };
 }
 
@@ -181,6 +209,27 @@ export const getPostPassword = cache(async function getPostPassword(
  * posts and matching. Fine at personal-blog volume; if this ever needs to
  * scale, swap for a real Slug column + a `filter` on that property.
  */
+/**
+ * The published counterpart of a post in the other language, or null.
+ *
+ * Costs no extra Notion call in practice: the other locale's list is
+ * behind the same `cache()` as everything else, and the pages that need
+ * this (the post view, its metadata) are already loading posts.
+ *
+ * Returning null is a normal outcome, not an error — the relation may be
+ * unset, and a counterpart still in Draft is deliberately invisible here
+ * because `getPublishedPosts` filters on Status. An unfinished
+ * translation can't leak through the language switch.
+ */
+export const getTranslation = cache(async function getTranslation(
+  post: BlogPost,
+): Promise<BlogPost | null> {
+  if (!post.translationId) return null;
+  const otherLocale: Locale = post.lang === "es" ? "en" : "es";
+  const candidates = await getPublishedPosts(otherLocale);
+  return candidates.find((candidate) => candidate.id === post.translationId) ?? null;
+});
+
 export const getPostBySlug = cache(async function getPostBySlug(
   locale: Locale,
   slug: string,

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getPostBySlug } from "@/lib/notion/posts";
+import { getPostBySlug, getTranslation } from "@/lib/notion/posts";
 import { getPageBlocks } from "@/lib/notion/blocks";
 import { deriveExcerpt } from "@/lib/notion/excerpt";
 import { SITE_URL, SITE_NAME, AUTHOR_NAME, OG_LOCALE, HTML_LANG } from "@/lib/seo/site";
@@ -81,6 +81,23 @@ export async function generateMetadata({
 
   const description = await resolveDescription(post, dict.blog.metaDescription);
 
+  // Each language is its own Notion row, so a post only has a counterpart
+  // URL once the two rows are linked by the translation relation. When
+  // they are, declaring both tells Google these are the same article in
+  // two languages, and the pair reinforces each other instead of
+  // competing as unrelated pages.
+  //
+  // A protected counterpart is left out on purpose: it is served
+  // `noindex`, and pointing hreflang at a page you have asked Google not
+  // to index is a contradictory signal.
+  const translation = await getTranslation(post);
+  const languages: Record<string, string> = {
+    [locale]: `/${locale}/blog/${slug}`,
+  };
+  if (translation && !translation.isProtected) {
+    languages[translation.lang] = `/${translation.lang}/blog/${translation.slug}`;
+  }
+
   return {
     title: post.title,
     description,
@@ -89,13 +106,7 @@ export async function generateMetadata({
     keywords: post.tags.length > 0 ? post.tags : undefined,
     alternates: {
       canonical: `/${locale}/blog/${slug}`,
-      // NOTE: each Notion row is a single-language post with its own
-      // id-derived slug, so a post has no counterpart URL in the other
-      // locale to point `hreflang` at. Only the language this post is
-      // actually written in is declared. If the ES/EN posts are ever
-      // merged into one row (see the toggle model discussed), this is
-      // where the sibling URLs would go.
-      languages: { [locale]: `/${locale}/blog/${slug}` },
+      languages,
     },
     openGraph: {
       // "article" (not "website") is what unlocks published-time, author
@@ -130,6 +141,22 @@ export default async function BlogPostPage({
   const { locale, post } = resolved;
   const dict = getDictionary(locale);
 
+  // Where the language switch should actually go. Swapping the locale
+  // prefix — what it does everywhere else — produces a slug that doesn't
+  // exist in the other language and 404s, because each language is a
+  // separate Notion row with its own title and id.
+  //
+  // With the translation linked, it goes to the translated post. Without
+  // it, it falls back to that language's blog index: a real page in the
+  // language you asked for, rather than a dead end. A counterpart still
+  // in Draft resolves to null here, since getTranslation only looks at
+  // published posts — an unfinished translation can't leak out this way.
+  const otherLocale: Locale = locale === "es" ? "en" : "es";
+  const translation = await getTranslation(post);
+  const localeSwitchHref = translation
+    ? `/${translation.lang}/blog/${translation.slug}`
+    : `/${otherLocale}/blog`;
+
   // The gate runs BEFORE the body is fetched. That ordering is the whole
   // security model: an unauthorised visitor's response is built without
   // the post's content ever being loaded, so there is nothing in the HTML
@@ -138,7 +165,7 @@ export default async function BlogPostPage({
   if (post.isProtected && !(await hasAccess(post.id))) {
     return (
       <>
-        <SiteNav locale={locale} dict={dict} />
+        <SiteNav locale={locale} dict={dict} localeSwitchHref={localeSwitchHref} />
         <main className="mx-auto max-w-2xl px-4 pb-24 pt-32 sm:px-8">
           <Link
             href={`/${locale}/blog`}
@@ -223,7 +250,7 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SiteNav locale={locale} dict={dict} />
+      <SiteNav locale={locale} dict={dict} localeSwitchHref={localeSwitchHref} />
       <main className="mx-auto max-w-2xl px-4 pb-24 pt-32 sm:px-8">
         <Link
           href={`/${locale}/blog`}
