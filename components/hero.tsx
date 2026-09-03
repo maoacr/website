@@ -24,6 +24,10 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
   return (
     <section
+      // The one section that had no id. The cold open's invitation and its
+      // first-scroll assist both land here, and every other section already
+      // names itself this way.
+      id="intro"
       data-scene={dict.hero.slugline}
       aria-label={dict.hero.name.replace("\n", " ")}
       className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-4 pt-16 sm:px-8"

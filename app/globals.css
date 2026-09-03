@@ -144,14 +144,22 @@ body > main {
    the page. It is heavier in dark mode because a dark shadow on a dark
    ground needs the extra opacity to register at all. */
 .nav-glass {
-  background: color-mix(in srgb, var(--bg) 62%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: 0 8px 32px rgb(0 0 0 / 0.07);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  /* Drop shadow for the float, plus a hairline highlight along the top
+     edge. That inset line is what real glass does when light catches its
+     lip, and it is most of the difference between "translucent rectangle"
+     and something that looks lit. */
+  box-shadow:
+    0 8px 32px rgb(0 0 0 / 0.07),
+    inset 0 1px 0 rgb(255 255 255 / 0.5);
 }
 .dark .nav-glass {
-  background: color-mix(in srgb, var(--bg) 66%, transparent);
-  box-shadow: 0 10px 36px rgb(0 0 0 / 0.4);
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
+  box-shadow:
+    0 10px 36px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 
 /* Native View Transitions: theme + locale swap read as a soft cut */

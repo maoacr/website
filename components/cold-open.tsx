@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { FirstScrollAssist } from "./first-scroll-assist";
 
 /**
  * Pacing.
@@ -104,6 +105,12 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
       aria-label={slugline}
       className="relative flex min-h-[100svh] flex-col justify-center px-4 pt-16 sm:px-8"
     >
+      {/* Crossing a full viewport costs several trackpad flicks. This spends
+          exactly one gesture to get there — see the constraints in the
+          component; it is deliberately the narrowest form of a pattern that
+          is hostile in every wider form. */}
+      <FirstScrollAssist targetId="intro" />
+
       <div className="mx-auto w-full max-w-6xl">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-signal">
           {slugline}
@@ -152,18 +159,28 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
                 />
               </p>
 
-              {/* The invitation. It arrives only once the closing line has
-                  finished, so it reads as the scene handing over rather
-                  than a button competing with the sentences. */}
-              <p
-                className="mt-8 font-mono text-sm uppercase tracking-wider text-muted"
-                style={{
-                  opacity: isClosing && complete ? 1 : 0,
-                  transition: "opacity 900ms var(--ease-cut)",
-                }}
+            </div>
+
+            {/* The invitation is a real control, not a caption. Styled as
+                one it would read as clickable and do nothing, which is the
+                worst kind of affordance: it invites the click it cannot
+                honour. It arrives only after the closing line finishes, so
+                it hands the scene over rather than competing with it, and
+                `inert` keeps it out of the tab order until then. */}
+            <div
+              inert={!(isClosing && complete)}
+              style={{
+                opacity: isClosing && complete ? 1 : 0,
+                transition: "opacity 900ms var(--ease-cut)",
+              }}
+            >
+              <a
+                href="#intro"
+                className="mt-10 inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-fg transition-colors hover:border-signal hover:text-signal"
               >
                 {invite}
-              </p>
+                <span aria-hidden="true">↓</span>
+              </a>
             </div>
 
             {/* The real content: read by crawlers and assistive tech, never
