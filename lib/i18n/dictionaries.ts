@@ -58,6 +58,7 @@ export const dictionaries = {
         },
       ],
       bridge: "Todo eso lo hizo la misma persona.",
+      cue: "Desplázate — entran los títulos",
     },
     hero: {
       slugline: "INT. ESTUDIO — DÍA 1",
@@ -299,6 +300,7 @@ export const dictionaries = {
         },
       ],
       bridge: "Same person did all of it.",
+      cue: "Scroll — titles roll",
     },
     hero: {
       slugline: "INT. STUDIO — DAY 1",

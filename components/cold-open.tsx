@@ -72,10 +72,15 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
   const current = frames[frameIndex];
 
   return (
+    /* Full viewport on purpose. A cold open that shares the screen with
+       what follows isn't a scene, it's a block — the reader has to arrive
+       at the bottom of it and *choose* to scroll for the first scroll to
+       feel like starting the projection. `svh` rather than `vh` so mobile
+       browser chrome doesn't crop it. `pt-16` clears the fixed nav. */
     <section
       data-scene={dict.coldOpen.slugline}
       aria-label={dict.coldOpen.slugline}
-      className="px-4 pb-24 pt-32 sm:px-8"
+      className="relative flex min-h-[100svh] flex-col justify-center px-4 pt-16 sm:px-8"
     >
       <div className="mx-auto w-full max-w-6xl">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-signal">
@@ -130,6 +135,14 @@ export function ColdOpen({ dict }: { dict: Dictionary }) {
         <p className="mt-10 border-t border-signal pt-7 font-mono text-sm uppercase tracking-wider text-signal">
           {dict.coldOpen.bridge}
         </p>
+      </div>
+
+      {/* The affordance that makes the full-height choice work: without it
+          a screen that ends cleanly reads as the whole page. Mirrors the
+          hero's cue, one beat earlier in the sequence. */}
+      <div className="absolute bottom-8 left-4 hidden font-mono text-[11px] uppercase tracking-widest text-muted sm:left-8 sm:flex sm:items-center sm:gap-2">
+        <span className="h-px w-8 bg-border" />
+        {dict.coldOpen.cue}
       </div>
     </section>
   );
