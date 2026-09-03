@@ -3,6 +3,7 @@ import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getPostBySlug } from "@/lib/notion/posts";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/seo/site";
+import { brand, brandDark } from "@/lib/brand";
 
 export const alt = "Mario Crespo — Blog";
 export const size = { width: 1200, height: 630 };
@@ -12,12 +13,12 @@ export const contentType = "image/png";
 // a stale card.
 export const revalidate = 3600;
 
-// See the note in app/[locale]/opengraph-image.tsx — Satori needs literal
-// values, not CSS variables or Tailwind classes.
-const GRAPHITE = "#0a0a0c";
-const FOG = "#e8e7e2";
-const SIGNAL = "#ff4520";
-const MUTED = "#97968f";
+// See the note in lib/brand.ts — Satori needs literal values, not CSS
+// variables or Tailwind classes.
+const GRAPHITE = brand.graphite;
+const FOG = brand.fog;
+const SIGNAL = brand.signal;
+const MUTED = brandDark.muted;
 
 export default async function BlogPostOpengraphImage({
   params,

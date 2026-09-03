@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { SITE_URL } from "@/lib/seo/site";
+import { brand, brandDark } from "@/lib/brand";
 
 // Next's file-based convention: this replaces the `/og-image.png` that the
 // metadata used to point at but that never existed in /public — every
@@ -12,13 +13,15 @@ export const alt = "Mario Crespo — Software Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Brand tokens, duplicated as literals on purpose: this renders through
-// Satori, which resolves neither CSS custom properties nor Tailwind
-// classes — it only understands inline styles with concrete values.
-const GRAPHITE = "#0a0a0c";
-const FOG = "#e8e7e2";
-const SIGNAL = "#ff4520";
-const MUTED = "#97968f";
+// Satori resolves neither CSS custom properties nor Tailwind classes — it
+// only understands inline styles with concrete values, so the palette has
+// to arrive as literals. They come from lib/brand.ts rather than being
+// retyped here; see the note in that file on why the duplication with
+// globals.css can't be removed, only guarded (npm run verify:brand).
+const GRAPHITE = brand.graphite;
+const FOG = brand.fog;
+const SIGNAL = brand.signal;
+const MUTED = brandDark.muted;
 
 export default async function OpengraphImage({
   params,
