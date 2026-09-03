@@ -24,10 +24,52 @@ export const dictionaries = {
       switchTheme: "Cambiar tema",
       switchLocale: "Switch to English",
     },
+    // COPIA PROVISIONAL — pensada para reemplazarse.
+    //
+    // La regla, que importa más que el texto: cada línea nombra UN MECANISMO
+    // REAL en dos dominios a la vez, y es verificable. Software y música,
+    // color y percepción, montaje e interfaz.
+    //
+    // Lo que hay que evitar a toda costa es el aforismo — "el código es
+    // poesía", "diseñar es escuchar". Ese registro suena a experto sin
+    // serlo, y es el equivalente en frase del dato de industria que
+    // cualquiera googlea. El test: si se puede escribir sin haber hecho
+    // las dos cosas, no sirve.
+    //
+    // Las etiquetas nombran la INTERSECCIÓN, no la disciplina: el cruce es
+    // la afirmación, no una lista de oficios.
+    coldOpen: {
+      slugline: "COLD OPEN — ANTES DE LOS TÍTULOS",
+      frames: [
+        {
+          axis: "Música · Movimiento",
+          line: "El groove muere si cuantizás la batería a la grilla. La interfaz muere si animás en linear.",
+        },
+        {
+          axis: "Audio · Latencia",
+          line: "Un músico siente 10 milisegundos de retardo. Un usuario siente 100. Es el mismo hardware humano.",
+        },
+        {
+          axis: "Color · Percepción",
+          line: "Mezclar color en sRGB ensucia el medio tono: el ojo no es lineal, y casi todo el software finge que sí.",
+        },
+        {
+          axis: "Montaje · Interfaz",
+          line: "Un corte funciona cuando el ojo ya venía en movimiento. Una transición de interfaz, igual.",
+        },
+        {
+          axis: "Tipografía · Fisiología",
+          line: "La medida de 65 caracteres no es estética: es hasta dónde el ojo vuelve al margen sin perderse.",
+        },
+      ],
+      bridge: "Nadie ve esto desde un solo oficio.",
+      invite: "Dale play.",
+      cue: "Desplázate — entran los títulos",
+    },
     hero: {
       slugline: "INT. ESTUDIO — DÍA 1",
       kicker: "Software Engineer · Dirección de arte digital",
-      name: "Mario Alejandro\nCrespo Reyes",
+      name: "Hola,\nsoy Mao",
       lead: "Escribo interfaces con la misma disciplina con la que se edita una escena: cada corte, cada encuadre y cada línea de código tienen que justificar su lugar.",
       cta1: "Ver proyectos",
       cta2: "Hablemos",
@@ -209,9 +251,16 @@ export const dictionaries = {
         metaDescription: "Entrada privada, protegida con contraseña.",
       },
     },
+    // El footer cierra la película. `credits` es un array por la misma razón
+    // que `about.stats` y `coldOpen.frames`: sumar una línea (música, foto,
+    // agradecimientos) es editar datos, nunca el componente.
     footer: {
+      end: "Fin.",
+      credits: [
+        { label: "Dirección y desarrollo", value: "Mario Crespo" },
+        { label: "Rodado en", value: "Fusagasugá, Colombia" },
+      ],
       rights: "Todos los derechos reservados.",
-      builtWith: "Diseñado y desarrollado por Mario Crespo.",
       backToTop: "Volver arriba",
     },
   },
@@ -238,10 +287,39 @@ export const dictionaries = {
       switchTheme: "Toggle theme",
       switchLocale: "Cambiar a Español",
     },
+    // PLACEHOLDER COPY — see the note on the Spanish `coldOpen` for the rule.
+    coldOpen: {
+      slugline: "COLD OPEN — BEFORE THE TITLES",
+      frames: [
+        {
+          axis: "Music · Motion",
+          line: "Quantize drums to a perfect grid and the groove dies. Animate an interface linear and it dies the same way.",
+        },
+        {
+          axis: "Audio · Latency",
+          line: "A musician feels 10 milliseconds of delay. A user feels 100. Same human hardware.",
+        },
+        {
+          axis: "Colour · Perception",
+          line: "Blending colour in sRGB muddies the midtone: the eye isn't linear, and most software pretends it is.",
+        },
+        {
+          axis: "Editing · Interface",
+          line: "A cut works when the eye was already moving. So does an interface transition.",
+        },
+        {
+          axis: "Type · Physiology",
+          line: "The 65-character measure isn't taste: it's how far the eye returns to the margin without losing its place.",
+        },
+      ],
+      bridge: "No single discipline sees all of this.",
+      invite: "Press play.",
+      cue: "Scroll — titles roll",
+    },
     hero: {
       slugline: "INT. STUDIO — DAY 1",
       kicker: "Software Engineer · Digital Art Direction",
-      name: "Mario Alejandro\nCrespo Reyes",
+      name: "Hi,\nI'm Mao",
       lead: "I write interfaces with the same discipline you'd edit a scene: every cut, every frame, every line of code has to earn its place.",
       cta1: "View projects",
       cta2: "Let's talk",
@@ -424,8 +502,12 @@ export const dictionaries = {
       },
     },
     footer: {
+      end: "The End.",
+      credits: [
+        { label: "Directed and built by", value: "Mario Crespo" },
+        { label: "Shot in", value: "Fusagasugá, Colombia" },
+      ],
       rights: "All rights reserved.",
-      builtWith: "Designed and built by Mario Crespo.",
       backToTop: "Back to top",
     },
   },

@@ -14,6 +14,12 @@
   --border: var(--line);
   --surface: #ffffff;
   --muted: #6b6a64;
+
+  /* The site's one easing curve — the "cut". Used by the theme/locale view
+     transitions and the nav reveal. Framer Motion needs it as a JS array
+     and can't read this, so the same four numbers appear there too; this
+     at least stops the CSS side repeating itself. */
+  --ease-cut: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .dark {
@@ -114,11 +120,62 @@ body > main {
   font-variant-numeric: tabular-nums;
 }
 
+/* Caret for the cold-open typewriter. A hard on/off step, not a fade:
+   Tailwind's `animate-pulse` eases opacity and reads as a skeleton
+   loader, which is the opposite of the intent on a page about typing.
+   Held solid while characters are landing and only blinking once the
+   line is complete, the way a real caret behaves.
+   The global prefers-reduced-motion block already flattens this. */
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.caret-blink {
+  animation: caret-blink 1.06s step-end infinite;
+}
+
+/* Floating nav treatment.
+   Blur alone gives a translucent panel, not glass. The saturation boost is
+   what keeps colour passing under the bar alive instead of washing to
+   grey, and it is the difference between "frosted" and the liquid-glass
+   read.
+   The shadow is the only one in the system, on purpose: "floating" has to
+   be legible as depth, and a border by itself reads as a box pasted onto
+   the page. It is heavier in dark mode because a dark shadow on a dark
+   ground needs the extra opacity to register at all. */
+/* --nav-blur is the dial. Raise it if text still reads through the bar;
+   lower it if the glass starts looking like frosted plastic. Prefer moving
+   this over raising the background opacity — opacity past ~80% stops being
+   glass and becomes a solid bar with a shadow. */
+.nav-glass {
+  --nav-blur: 48px;
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
+  backdrop-filter: blur(var(--nav-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(180%);
+  /* Drop shadow for the float, plus a hairline highlight along the top
+     edge. That inset line is what real glass does when light catches its
+     lip, and it is most of the difference between "translucent rectangle"
+     and something that looks lit. */
+  box-shadow:
+    0 8px 32px rgb(0 0 0 / 0.07),
+    inset 0 1px 0 rgb(255 255 255 / 0.5);
+}
+/* Dark runs far more opaque than light (95% vs 74%) by choice, not
+   oversight: light text on a dark ground punches through frosting much
+   harder than dark text on a light one, so the two themes need different
+   amounts of cover to read as equally clean. */
+.dark .nav-glass {
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
+  box-shadow:
+    0 10px 36px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
 /* Native View Transitions: theme + locale swap read as a soft cut */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-timing-function: var(--ease-cut);
 }
 
 @media (prefers-reduced-motion: reduce) {
