@@ -163,7 +163,7 @@ export const dictionaries = {
       slugline: "EXT. PORTAFOLIO — TRAVELLING",
       title: "Proyectos",
       subtitle:
-        "Cuatro proyectos representan el rango del trabajo: de marca a producto, de frontend a arquitectura full-stack. Las imágenes finales de cada uno están en producción.",
+        "Cinco proyectos representan el rango del trabajo: de marca a producto, de frontend a arquitectura full-stack, y el sistema de diseño de este mismo sitio. Las imágenes finales de cada uno están en producción.",
       cta: "Ver detalle",
       placeholderTag: "En edición",
       moreWorkTitle: "Más trabajo",
@@ -413,7 +413,7 @@ export const dictionaries = {
       slugline: "EXT. PORTFOLIO — TRAVELLING SHOT",
       title: "Projects",
       subtitle:
-        "Four projects span the range of the work: from brand to product, from frontend to full-stack architecture. Final imagery for each is still in the edit bay.",
+        "Five projects span the range of the work: from brand to product, from frontend to full-stack architecture, and the design system of this very site. Final imagery for each is still in the edit bay.",
       cta: "View case study",
       placeholderTag: "In edit",
       moreWorkTitle: "More work",
