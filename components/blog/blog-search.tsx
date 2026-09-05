@@ -11,12 +11,14 @@ export function BlogSearch({
   dateLocale,
   placeholder,
   emptyLabel,
+  emptyCoverLabel,
 }: {
   posts: BlogPost[];
   locale: Locale;
   dateLocale: string;
   placeholder: string;
   emptyLabel: string;
+  emptyCoverLabel: string;
 }) {
   const [query, setQuery] = useState("");
 
@@ -50,7 +52,13 @@ export function BlogSearch({
       ) : (
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {filtered.map((post) => (
-            <PostCard key={post.id} post={post} locale={locale} dateLocale={dateLocale} />
+            <PostCard
+              key={post.id}
+              post={post}
+              locale={locale}
+              dateLocale={dateLocale}
+              emptyCoverLabel={emptyCoverLabel}
+            />
           ))}
         </div>
       )}

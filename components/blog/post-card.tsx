@@ -1,15 +1,18 @@
 import Link from "next/link";
 import type { BlogPost } from "@/lib/notion/types";
 import type { Locale } from "@/lib/i18n/config";
+import { PostCover } from "./post-cover";
 
 export function PostCard({
   post,
   locale,
   dateLocale,
+  emptyCoverLabel,
 }: {
   post: BlogPost;
   locale: Locale;
   dateLocale: string;
+  emptyCoverLabel: string;
 }) {
   const formattedDate = post.publishedDate
     ? new Date(post.publishedDate).toLocaleDateString(dateLocale, {
@@ -22,8 +25,11 @@ export function PostCard({
   return (
     <Link
       href={`/${locale}/blog/${post.slug}`}
-      className="group block rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-signal/60"
+      className="group block overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-signal/60"
     >
+      <PostCover post={post} emptyLabel={emptyCoverLabel} />
+
+      <div className="p-6">
       <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted">
         {post.category && <span className="text-signal">{post.category}</span>}
         {formattedDate && <span>{formattedDate}</span>}
@@ -49,6 +55,7 @@ export function PostCard({
       {post.author && (
         <p className="mt-4 text-xs text-muted">{post.author}</p>
       )}
+      </div>
     </Link>
   );
 }
