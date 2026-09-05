@@ -77,6 +77,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   });
 
+  // Served from /public rather than a route, so nothing here discovers it
+  // automatically — but it is a real page on the domain and a portfolio
+  // piece in its own right. Single-language and standalone, so it carries
+  // no locale alternates. No lastModified: it changes when the system it
+  // documents does, which is not something this file can know.
+  const standaloneRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}/hoja-de-rodaje.html`,
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    },
+  ];
+
   const postRoutes: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     (postsByLocale[locale] ?? []).map((post) => ({
       url: `${SITE_URL}/${locale}/blog/${post.slug}`,
@@ -87,5 +100,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...staticRoutes, ...postRoutes];
+  return [...staticRoutes, ...standaloneRoutes, ...postRoutes];
 }
