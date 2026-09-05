@@ -114,7 +114,7 @@ relación. Hay que declararlo.
 
 Se declara con una **relación de la database consigo misma**. Notion crea
 las dos caras de esa relación y, al apuntar a la misma tabla, ambas caen
-como dos columnas acá (hoy `Lang` y `Relation`): una la completás vos, la
+como dos columnas acá (hoy `Translate` y `Relation`): una la completás vos, la
 otra la espeja Notion. **El vínculo vive en una columna distinta según de
 qué lado del par estés parado**, así que `readTranslationId` busca las
 columnas por *tipo* (`relation`) y no por nombre — leer una sola columna
