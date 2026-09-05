@@ -51,9 +51,10 @@ function publishedFilter(
  * fail in the other.
  *
  * So relation columns are found by *type* rather than by name, and the
- * first one holding a value wins. That also means renaming them in Notion
- * — they're currently called "Lang" and "Relation", neither of which says
- * "translation" — won't break anything here.
+ * first one holding a value wins. Renaming them in Notion therefore costs
+ * nothing here — the pair started out as "Lang" and "Relation" and the
+ * first is now "Translate", with no code change needed. Name them for
+ * whatever reads clearly in the database.
  */
 function readTranslationId(props: PageObjectResponse["properties"]): string | null {
   for (const prop of Object.values(props)) {
