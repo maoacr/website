@@ -141,6 +141,7 @@ export default async function BlogPage({
           dateLocale={dict.blog.dateLocale}
           placeholder={dict.blog.searchPlaceholder}
           emptyLabel={dict.blog.empty}
+          emptyCoverLabel={dict.blog.emptyCover}
         />
       </main>
       <SiteFooter dict={dict} />

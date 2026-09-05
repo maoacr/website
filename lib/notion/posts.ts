@@ -127,7 +127,26 @@ function mapPage(page: PageObjectResponse, locale: Locale): BlogPost {
     excerpt,
     isProtected,
     translationId: readTranslationId(props),
+    cover: readCover(page),
   };
+}
+
+/**
+ * The page's Notion cover, if it has one.
+ *
+ * This is `page.cover`, a native property of the page rather than a
+ * database column — which is why it does not appear in the schema
+ * alongside Title and Status, and why nothing needs adding to Notion to
+ * use it. Dropping a banner on the post is the whole workflow.
+ *
+ * Two shapes come back. `external` is a URL you pasted and it never
+ * expires. `file` is an image uploaded to Notion, served from S3 with a
+ * signature valid for exactly one hour — measured, not assumed. Callers
+ * have to respect that difference; see the note on `BlogPost.cover`.
+ */
+function readCover(page: PageObjectResponse): string | null {
+  if (!page.cover) return null;
+  return page.cover.type === "external" ? page.cover.external.url : page.cover.file.url;
 }
 
 /**

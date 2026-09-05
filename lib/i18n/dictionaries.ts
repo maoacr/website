@@ -245,6 +245,7 @@ export const dictionaries = {
       empty: "No hay posts que coincidan con la búsqueda.",
       back: "Volver al blog",
       dateLocale: "es-CO",
+      emptyCover: "Sin imagen",
       metaTitle: "Blog",
       metaDescription:
         "Artículos y notas de Mario Crespo sobre desarrollo web y mobile, arquitectura de software, React, Next.js y dirección de arte digital.",
@@ -501,6 +502,7 @@ export const dictionaries = {
       empty: "No posts match your search.",
       back: "Back to blog",
       dateLocale: "en-US",
+      emptyCover: "No image",
       metaTitle: "Blog",
       metaDescription:
         "Articles and notes by Mario Crespo on web and mobile development, software architecture, React, Next.js and digital art direction.",

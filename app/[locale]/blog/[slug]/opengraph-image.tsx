@@ -50,6 +50,12 @@ export default async function BlogPostOpengraphImage({
   // no text-fitting of its own, so the size is chosen up front.
   const titleFontSize = title.length > 80 ? 54 : title.length > 45 ? 68 : 84;
 
+  // The direct Notion URL, not the proxy. Satori fetches and bakes the
+  // image into the PNG at generation time, when that signature is fresh —
+  // the finished card is self-contained and has nothing left to expire.
+  // A protected post shows no cover for the same reason it shows no title.
+  const cover = isLocked ? null : post?.cover;
+
   return new ImageResponse(
     (
       <div
@@ -61,8 +67,29 @@ export default async function BlogPostOpengraphImage({
           justifyContent: "space-between",
           background: GRAPHITE,
           padding: "72px 80px",
+          position: "relative",
         }}
       >
+        {cover && (
+          <img
+            src={cover}
+            alt=""
+            width={1200}
+            height={630}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: 1200,
+              height: 630,
+              objectFit: "cover",
+              // Dimmed hard: the headline has to stay readable over
+              // whatever image happens to be there, and a social card is
+              // read at thumbnail size.
+              opacity: 0.28,
+            }}
+          />
+        )}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{

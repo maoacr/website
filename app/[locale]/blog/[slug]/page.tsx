@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { NotionBlockRenderer } from "@/components/blog/notion-block-renderer";
+import { PostCover } from "@/components/blog/post-cover";
 import { PasswordGate } from "@/components/blog/password-gate";
 import { hasAccess } from "@/lib/blog/access";
 
@@ -281,6 +282,14 @@ export default async function BlogPostPage({
             </div>
           )}
         </header>
+
+        <div className="mt-10 overflow-hidden rounded-2xl border border-border">
+          <PostCover
+            post={post}
+            emptyLabel={dict.blog.emptyCover}
+            className="aspect-[21/9]"
+          />
+        </div>
 
         <article className="mt-10">
           <NotionBlockRenderer blocks={blocks} />

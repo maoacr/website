@@ -30,6 +30,17 @@ export type BlogPost = {
    */
   isProtected: boolean;
   /**
+   * The page's Notion cover — the banner at the top of the page, not a
+   * database column. Null when the post has none.
+   *
+   * For a cover uploaded *to* Notion this is a signed S3 URL that expires
+   * one hour after the API returned it, so it is only safe where the image
+   * is consumed immediately (the OpenGraph route bakes it into a PNG at
+   * generation). Anything rendered into HTML must go through
+   * `coverProxyPath` instead — see the note there.
+   */
+  cover: string | null;
+  /**
    * Notion page id of this post's translation, or null.
    *
    * Just the id — a Notion relation carries nothing else. Resolving it to
