@@ -234,6 +234,11 @@ export const dictionaries = {
       lead: "Disponible para proyectos freelance, consultoría de producto y roles de ingeniería frontend/full-stack.",
       email: "Escribir un correo",
       whatsapp: "WhatsApp",
+      cv: "Descargar CV",
+      // Un PDF por idioma, en /public. El nombre del archivo es la URL y
+      // además es el nombre con el que queda guardado en la máquina de
+      // quien lo baja, así que se identifica solo.
+      cvFile: "/CV-es-Mario_Crespo.pdf",
       location: "Fusagasugá, Colombia · GMT-5",
     },
     blog: {
@@ -491,6 +496,8 @@ export const dictionaries = {
       lead: "Available for freelance projects, product consulting, and frontend/full-stack engineering roles.",
       email: "Send an email",
       whatsapp: "WhatsApp",
+      cv: "Download CV",
+      cvFile: "/CV-en-Mario_Crespo.pdf",
       location: "Fusagasugá, Colombia · GMT-5",
     },
     blog: {
