@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Tailwind v4 resolves `dark:` against prefers-color-scheme by default,
+   but next-themes applies the theme as a `.dark` class — so an explicit
+   toggle against the OS preference would leave every `dark:` utility
+   firing on the wrong theme. This points the variant at the class the app
+   actually sets. Nothing used `dark:` before this, so it changes no
+   existing output. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --paper: #f5f5f2;
   --graphite: #0a0a0c;
@@ -170,6 +178,33 @@ body > main {
   box-shadow:
     0 10px 36px rgb(0 0 0 / 0.4),
     inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+/* Third-party marks in dark mode.
+   Neither logo has an official reversed version, and altering a brand
+   colour is not ours to do — but a dark ground leaves both illegible: the
+   Platzi green measures 1.46:1 on light and CUN's greens vanish on dark.
+   So each keeps its full colour in light and goes to white/greys in dark,
+   which is the standard knockout treatment.
+   CUN is a raster, so it takes a filter rather than a fill. Greyscale
+   alone would leave mid-dark greys on a near-black ground, hence the
+   brightness push — it keeps the wordmark's two-tone relationship in the
+   original order instead of flattening it to a silhouette.
+
+   2.2 is measured, not taste. Decoding the PNG, `grayscale(1)` yields two
+   dominant tones: 80 (50% of the opaque pixels) and 176 (33%). At 2.2 they
+   land on 176 and pure white — 8.9:1 and 19.6:1 against --graphite, with
+   the lighter tone still lighter. Anything under ~1.5 avoids the clip but
+   drops the dark tone to 4.5:1, which is dim for a mark; the clip is what
+   makes this read as a knockout rather than a grey smudge. */
+.logo-platzi {
+  color: #0aea89;
+}
+.dark .logo-platzi {
+  color: #ffffff;
+}
+.dark .logo-knockout {
+  filter: grayscale(1) brightness(2.2);
 }
 
 /* Native View Transitions: theme + locale swap read as a soft cut */
