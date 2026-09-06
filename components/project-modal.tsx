@@ -64,24 +64,46 @@ export function ProjectModal({
       // `close` fires for Escape and for `dialog.close()` alike, so this is
       // the single place the parent's state gets told the modal went away.
       onClose={onClose}
-      // Clicking the backdrop closes. The dialog element itself is the
-      // full-viewport box, so a click landing on it rather than on the
-      // panel inside means the backdrop was hit.
+      // Clicking the backdrop closes. A click on the ::backdrop pseudo
+      // element is retargeted to the dialog itself, so the dialog being the
+      // event target — rather than anything inside the panel — means the
+      // backdrop was hit.
       onClick={(event) => {
         if (event.target === ref.current) onClose();
       }}
       aria-label={copy.title}
-      className="max-h-[85svh] w-[min(46rem,92vw)] overflow-y-auto rounded-2xl border border-border bg-transparent p-0 text-fg backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+      /* `m-auto` is load-bearing, not a tidy-up. A modal <dialog> is not
+         centred by any layout of ours: the UA stylesheet pins it with
+         `inset: 0` and centres it with `margin: auto`. Tailwind's Preflight
+         resets `margin: 0` on `*`, which deletes exactly that — and the
+         dialog collapses into the top-left corner.
+
+         `max-w` duplicates the width on purpose. The UA also forces
+         `max-width: calc(100% - 6px - 2em)` on `dialog:modal`, which would
+         otherwise clamp the panel narrower than asked and make the gutter
+         an arbitrary ~19px instead of the 16px the rest of the site uses.
+
+         Sizing reads as one expression rather than a breakpoint: on a phone
+         the panel is the viewport minus a 1rem gutter each side; past
+         ~48rem the 46rem cap takes over and it stops growing, which is the
+         measure where the summary still reads as prose. Height matches —
+         free to reach the full screen on a phone, capped on a desktop so
+         the modal stays legibly a layer above the page. */
+      className="m-auto max-h-[calc(100svh-2rem)] w-[min(46rem,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain rounded-2xl border border-border bg-transparent p-0 text-fg backdrop:bg-black/50 backdrop:backdrop-blur-sm sm:max-h-[85svh]"
     >
       <div className="glass">
-        <div className="relative aspect-[16/9] w-full overflow-hidden">
-          <Image
-            src={project.image}
-            alt={copy.title}
-            fill
-            sizes="(min-width: 768px) 46rem, 92vw"
-            className="object-cover"
-          />
+        {/* Zero-height sticky strip so the close button stays put.
+            The dialog is the scroll container, and now that the panel can
+            reach the full height of a phone screen, a button nested in the
+            image would scroll away and leave a full-screen modal with no
+            visible way out. Escape and the back gesture still work, but
+            neither is discoverable on a touch screen.
+            It has to come before the image, not after: `sticky` pins an
+            element at its natural position and never lifts it above where
+            it starts, so declared later it would sit under the image and
+            stay there. `h-0` keeps it out of the flow entirely — it exists
+            only to give the button something to hang from. */}
+        <div className="sticky top-0 z-10 h-0">
           <button
             type="button"
             onClick={onClose}
@@ -90,6 +112,18 @@ export function ProjectModal({
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
+        </div>
+
+        <div className="relative aspect-[16/9] w-full overflow-hidden">
+          <Image
+            src={project.image}
+            alt={copy.title}
+            fill
+            /* Matches the width expression on the dialog: the panel is the
+               viewport minus a 1rem gutter until the 46rem cap bites. */
+            sizes="(min-width: 48rem) 46rem, calc(100vw - 2rem)"
+            className="object-cover"
+          />
         </div>
 
         <div className="p-7 sm:p-9">
