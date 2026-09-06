@@ -36,34 +36,30 @@ export function About({ dict }: { dict: Dictionary }) {
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
                 {dict.about.educationTitle}
               </p>
-              <ul className="mt-4 space-y-4">
+              <ul className="mt-6 space-y-7">
                 {dict.about.education.map((edu) => (
-                  <li key={edu.school} className="flex items-start gap-4">
-                    {/* Two marks, two treatments, because the sources
-                        differ in kind.
+                  <li key={edu.school} className="flex items-center gap-6">
+                    {/* No chip. The marks carry themselves at this size,
+                        and a border around each one made them read as
+                        icons in a list rather than as the institutions.
 
-                        Platzi ships a single-colour icon, so it inlines and
-                        takes currentColor — one asset, both themes.
+                        Fixed-width slot because the two are different
+                        shapes — Platzi is a square icon, CUN a wordmark
+                        near 3:1. Without it the text column would start at
+                        a different place on each row.
 
-                        CUN's is a full-colour wordmark with no monochrome
-                        version, so it cannot follow the theme. It sits on a
-                        light chip that stays light in dark mode, which is
-                        the standard way to place a logo you are not allowed
-                        to alter. */}
-                    <span
-                      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border ${
-                        edu.mark === "cun" ? "bg-white p-1.5" : "text-fg"
-                      }`}
-                    >
+                        Both rules live in globals.css: full brand colour on
+                        light, white and greys on dark. */}
+                    <span className="flex w-24 shrink-0 items-center">
                       {edu.mark === "platzi" ? (
-                        <PlatziMark className="h-5 w-5" />
+                        <PlatziMark className="logo-platzi h-11 w-11" />
                       ) : (
                         <Image
                           src="/logos/cun.png"
                           alt=""
                           width={113}
                           height={40}
-                          className="h-auto w-full object-contain"
+                          className="logo-knockout h-10 w-auto object-contain"
                         />
                       )}
                     </span>

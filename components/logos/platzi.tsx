@@ -1,15 +1,14 @@
 /**
- * The Platzi icon, as a single monochrome path.
+ * The Platzi icon, in Platzi's own green.
  *
  * Inlined rather than served as a file: it is well under a kilobyte, so a
- * separate request would cost more than the bytes it saves, and inlining
- * is what lets it take `currentColor` and follow the theme without a
- * second asset for dark mode.
+ * separate request would cost more than the bytes it saves.
  *
- * Recolouring someone else's mark normally breaks their brand guidelines.
- * This is the exception that proves it: the icon's own single-colour form
- * exists precisely to be set in one colour, so following the theme is the
- * intended use rather than a liberty.
+ * It takes `currentColor` so the colour lives in CSS beside CUN's, where
+ * both can follow the same rule: full brand colour on light, white on
+ * dark. The green measures 1.46:1 against the light ground on its own,
+ * which is why the dark theme knocks it out rather than keeping it.
+ * See `.logo-platzi` in globals.css.
  */
 export function PlatziMark({ className }: { className?: string }) {
   return (
