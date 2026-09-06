@@ -134,7 +134,8 @@ body > main {
   animation: caret-blink 1.06s step-end infinite;
 }
 
-/* Floating nav treatment.
+/* Floating glass. Two consumers now — the nav capsule and the project
+   modal — so it is named for the treatment rather than for the nav.
    Blur alone gives a translucent panel, not glass. The saturation boost is
    what keeps colour passing under the bar alive instead of washing to
    grey, and it is the difference between "frosted" and the liquid-glass
@@ -143,15 +144,15 @@ body > main {
    be legible as depth, and a border by itself reads as a box pasted onto
    the page. It is heavier in dark mode because a dark shadow on a dark
    ground needs the extra opacity to register at all. */
-/* --nav-blur is the dial. Raise it if text still reads through the bar;
+/* --glass-blur is the dial. Raise it if text still reads through the bar;
    lower it if the glass starts looking like frosted plastic. Prefer moving
    this over raising the background opacity — opacity past ~80% stops being
    glass and becomes a solid bar with a shadow. */
-.nav-glass {
-  --nav-blur: 48px;
+.glass {
+  --glass-blur: 48px;
   background: color-mix(in srgb, var(--bg) 74%, transparent);
-  backdrop-filter: blur(var(--nav-blur)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   /* Drop shadow for the float, plus a hairline highlight along the top
      edge. That inset line is what real glass does when light catches its
      lip, and it is most of the difference between "translucent rectangle"
@@ -164,7 +165,7 @@ body > main {
    oversight: light text on a dark ground punches through frosting much
    harder than dark text on a light one, so the two themes need different
    amounts of cover to read as equally clean. */
-.dark .nav-glass {
+.dark .glass {
   background: color-mix(in srgb, var(--bg) 95%, transparent);
   box-shadow:
     0 10px 36px rgb(0 0 0 / 0.4),

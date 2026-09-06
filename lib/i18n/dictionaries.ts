@@ -174,6 +174,7 @@ export const dictionaries = {
       subtitle:
         "Cuatro proyectos representan el rango del trabajo: de marca a producto, de frontend a arquitectura full-stack. Las imágenes finales de cada uno están en producción.",
       cta: "Ver detalle",
+      close: "Cerrar",
       placeholderTag: "En edición",
       moreWorkTitle: "Más trabajo",
       moreWorkSubtitle: "Otros proyectos recientes, fuera de los cuatro casos principales.",
@@ -436,6 +437,7 @@ export const dictionaries = {
       subtitle:
         "Four projects span the range of the work: from brand to product, from frontend to full-stack architecture. Final imagery for each is still in the edit bay.",
       cta: "View case study",
+      close: "Close",
       placeholderTag: "In edit",
       moreWorkTitle: "More work",
       moreWorkSubtitle: "Other recent projects, outside the four main case studies.",
