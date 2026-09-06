@@ -3,10 +3,11 @@
 import { motion } from "framer-motion";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { SceneHeading } from "./scene-heading";
+import { AUTHOR_EMAIL, AUTHOR_LINKEDIN } from "@/lib/seo/site";
 
-const EMAIL = "iam@maoacr.com";
+// The one identity detail that lives only here — the others come from
+// lib/seo/site.ts, which the JSON-LD and metadata already read from.
 const WHATSAPP = "https://wa.me/573192994168";
-const LINKEDIN = "https://linkedin.com/in/maoacr";
 
 export function Contact({ dict }: { dict: Dictionary }) {
   return (
@@ -31,7 +32,7 @@ export function Contact({ dict }: { dict: Dictionary }) {
 
         <div className="mt-10 flex flex-wrap items-center gap-4">
           <a
-            href={`mailto:${EMAIL}`}
+            href={`mailto:${AUTHOR_EMAIL}`}
             className="rounded-full bg-fg px-6 py-3 font-mono text-xs uppercase tracking-wider text-bg transition-colors hover:bg-signal hover:text-white"
           >
             {dict.contact.email}
@@ -45,12 +46,23 @@ export function Contact({ dict }: { dict: Dictionary }) {
             {dict.contact.whatsapp}
           </a>
           <a
-            href={LINKEDIN}
+            href={AUTHOR_LINKEDIN}
             target="_blank"
             rel="noreferrer noopener"
             className="rounded-full border border-border px-6 py-3 font-mono text-xs uppercase tracking-wider text-fg transition-colors hover:border-signal hover:text-signal"
           >
             LinkedIn
+          </a>
+          {/* No `download`: opening the PDF in the browser lets someone
+              skim it before deciding to keep it, and the filename already
+              identifies itself once they do save. */}
+          <a
+            href={dict.contact.cvFile}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="rounded-full border border-border px-6 py-3 font-mono text-xs uppercase tracking-wider text-fg transition-colors hover:border-signal hover:text-signal"
+          >
+            {dict.contact.cv}
           </a>
         </div>
 
