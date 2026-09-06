@@ -33,7 +33,7 @@ export function SiteNav({
        Total occupied height stays ~64px, so the pages' existing top padding
        still clears it. */
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-3 sm:px-8 sm:pt-4">
-      <div className="nav-glass mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-border/60 px-5 sm:px-7">
+      <div className="glass mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-border/60 px-5 sm:px-7">
         {/* Wordmark. `mao` leads because that is what people actually call
             him, what the domain says and what every handle resolves to —
             the previous "M. CRESPO." was the one spelling appearing

@@ -38,6 +38,7 @@ export function Projects({
               locale={locale}
               index={index}
               ctaLabel={dict.projects.cta}
+              closeLabel={dict.projects.close}
               size="lg"
             />
           ))}
@@ -59,6 +60,7 @@ export function Projects({
                   locale={locale}
                   index={index}
                   ctaLabel={dict.projects.cta}
+              closeLabel={dict.projects.close}
                   size="sm"
                 />
               ))}

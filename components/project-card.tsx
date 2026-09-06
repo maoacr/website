@@ -1,25 +1,30 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/data/projects";
 import type { Locale } from "@/lib/i18n/config";
+import { ProjectModal } from "./project-modal";
 
 export function ProjectCard({
   project,
   locale,
   index,
   ctaLabel,
+  closeLabel,
   size = "sm",
 }: {
   project: Project;
   locale: Locale;
   index: number;
   ctaLabel: string;
+  closeLabel: string;
   /** "lg" = headline case study (2-col grid), "sm" = secondary work (3-col grid). */
   size?: "lg" | "sm";
 }) {
   const copy = project[locale];
+  const [open, setOpen] = useState(false);
 
   return (
     <motion.article
@@ -57,7 +62,12 @@ export function ProjectCard({
         >
           {copy.title}
         </h3>
-        <p className="mt-3 text-sm leading-relaxed text-muted">{copy.summary}</p>
+        {/* Clamped on purpose: the card is the trailer. If it showed the
+            whole summary the modal would repeat it and the click would buy
+            nothing. */}
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted">
+          {copy.summary}
+        </p>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
           {project.stack.map((tech) => (
@@ -71,8 +81,12 @@ export function ProjectCard({
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
+          {/* This button existed and did nothing. It now opens the record
+              it was always promising. */}
           <button
             type="button"
+            onClick={() => setOpen(true)}
+            aria-haspopup="dialog"
             className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-fg transition-colors group-hover:text-signal"
           >
             {ctaLabel}
@@ -95,6 +109,14 @@ export function ProjectCard({
           ))}
         </div>
       </div>
+
+      <ProjectModal
+        project={project}
+        locale={locale}
+        open={open}
+        onClose={() => setOpen(false)}
+        closeLabel={closeLabel}
+      />
     </motion.article>
   );
 }
