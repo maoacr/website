@@ -111,16 +111,15 @@ export const dictionaries = {
       educationTitle: "Formación",
       education: [
         {
-          // Marca corta de la institución. Texto y no imagen: un logo de
-          // terceros no se puede recolorear para que funcione en los dos
-          // temas sin violar sus propias guías de marca.
-          mark: "CUN",
+          // Identificador de la marca a renderizar, no texto visible.
+          // El componente decide cómo se dibuja cada una.
+          mark: "cun",
           school: "Corporación Unificada Nacional de Educación Superior (CUN)",
           program: "Ingeniería de Software",
           period: "ago. 2026 — ago. 2029",
         },
         {
-          mark: "Platzi",
+          mark: "platzi",
           school: "Platzi Master",
           program: "Web Developer, Software — Bootcamp de Desarrollo Frontend",
           period: "2019 — 2021",
@@ -386,13 +385,13 @@ export const dictionaries = {
       educationTitle: "Education",
       education: [
         {
-          mark: "CUN",
+          mark: "cun",
           school: "Corporación Unificada Nacional de Educación Superior (CUN)",
           program: "Software Engineering",
           period: "Aug 2026 — Aug 2029",
         },
         {
-          mark: "Platzi",
+          mark: "platzi",
           school: "Platzi Master",
           program: "Web Developer, Software — Frontend Development Bootcamp",
           period: "2019 — 2021",

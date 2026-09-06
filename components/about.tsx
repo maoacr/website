@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import Image from "next/image";
 import { SceneHeading } from "./scene-heading";
+import { PlatziMark } from "./logos/platzi";
 
 export function About({ dict }: { dict: Dictionary }) {
   return (
@@ -37,13 +39,33 @@ export function About({ dict }: { dict: Dictionary }) {
               <ul className="mt-4 space-y-4">
                 {dict.about.education.map((edu) => (
                   <li key={edu.school} className="flex items-start gap-4">
-                    {/* Text mark rather than an image. A third-party logo
-                        cannot be recoloured to sit on both themes without
-                        breaking that owner's brand guidelines, and the two
-                        marks here have no monochrome version to use. This
-                        reads as the institution and costs no request. */}
-                    <span className="inline-flex h-10 shrink-0 items-center rounded-xl border border-border px-3 font-mono text-[11px] uppercase tracking-wider text-muted">
-                      {edu.mark}
+                    {/* Two marks, two treatments, because the sources
+                        differ in kind.
+
+                        Platzi ships a single-colour icon, so it inlines and
+                        takes currentColor — one asset, both themes.
+
+                        CUN's is a full-colour wordmark with no monochrome
+                        version, so it cannot follow the theme. It sits on a
+                        light chip that stays light in dark mode, which is
+                        the standard way to place a logo you are not allowed
+                        to alter. */}
+                    <span
+                      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border ${
+                        edu.mark === "cun" ? "bg-white p-1.5" : "text-fg"
+                      }`}
+                    >
+                      {edu.mark === "platzi" ? (
+                        <PlatziMark className="h-5 w-5" />
+                      ) : (
+                        <Image
+                          src="/logos/cun.png"
+                          alt=""
+                          width={113}
+                          height={40}
+                          className="h-auto w-full object-contain"
+                        />
+                      )}
                     </span>
                     <div>
                       <p className="font-medium text-fg">{edu.school}</p>
