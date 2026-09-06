@@ -95,17 +95,32 @@ export const dictionaries = {
       stats: [
         { value: "10+", label: "años en diseño audiovisual" },
         { value: "05", label: "empresas y estudios" },
-        { value: "150+", label: "cursos completados en Platzi" },
-        { value: "01", label: "premio de cortometraje — FICFUSA" },
+        {
+          value: "200+",
+          label: "cursos completados en Platzi",
+          href: "https://platzi.com/p/maoacr",
+        },
+        {
+          // La categoría va en la etiqueta a propósito: la página del
+          // festival lista todo 2019, y sin ella hay que buscar a ciegas.
+          value: "01",
+          label: "premio FICFUSA — categoría Un hecho corto",
+          href: "https://ficfusa.com/ficfusa-2019/",
+        },
       ],
       educationTitle: "Formación",
       education: [
         {
+          // Marca corta de la institución. Texto y no imagen: un logo de
+          // terceros no se puede recolorear para que funcione en los dos
+          // temas sin violar sus propias guías de marca.
+          mark: "CUN",
           school: "Corporación Unificada Nacional de Educación Superior (CUN)",
           program: "Ingeniería de Software",
           period: "ago. 2026 — ago. 2029",
         },
         {
+          mark: "Platzi",
           school: "Platzi Master",
           program: "Web Developer, Software — Bootcamp de Desarrollo Frontend",
           period: "2019 — 2021",
@@ -357,17 +372,27 @@ export const dictionaries = {
       stats: [
         { value: "10+", label: "years in visual production" },
         { value: "05", label: "companies & studios" },
-        { value: "150+", label: "courses completed on Platzi" },
-        { value: "01", label: "short-film award — FICFUSA" },
+        {
+          value: "200+",
+          label: "courses completed on Platzi",
+          href: "https://platzi.com/p/maoacr",
+        },
+        {
+          value: "01",
+          label: "FICFUSA award — Un hecho corto category",
+          href: "https://ficfusa.com/ficfusa-2019/",
+        },
       ],
       educationTitle: "Education",
       education: [
         {
+          mark: "CUN",
           school: "Corporación Unificada Nacional de Educación Superior (CUN)",
           program: "Software Engineering",
           period: "Aug 2026 — Aug 2029",
         },
         {
+          mark: "Platzi",
           school: "Platzi Master",
           program: "Web Developer, Software — Frontend Development Bootcamp",
           period: "2019 — 2021",
